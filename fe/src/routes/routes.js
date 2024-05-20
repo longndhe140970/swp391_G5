@@ -1,9 +1,13 @@
+import HomePage from "../pages/Home";
+import SignInPage from "../pages/Signin";
+
+
 export const ConfigRotues = [
   {
-    path: "",
-    page: ""
+    path: "/",
+    page: <HomePage />
   }, {
-    path: "",
-    page: ""
+    path: "/login",
+    page: <SignInPage />
   }
 ]
