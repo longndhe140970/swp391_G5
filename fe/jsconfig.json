@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "paths": {
-      "~/*": [
-        "./src/*"
-      ],
-    },
-  }
+    "module": "CommonJS",
+    "target": "ES6"
+  },
+  "include": [
+    "src/**/*"
+  ]
 }

@@ -3,10 +3,11 @@ import { create } from "zustand";
 const useSearchStore = create((set) => ({
   searchData: {
     author: "",
-    department: "",
+    category: "",
     publisher: "",
     title: "",
     language: "",
+    price: 1
   },
   setSearchData: (value) =>
     set((state) => ({
