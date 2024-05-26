@@ -11,4 +11,5 @@ export const AUTHOR_API = {
 export const ORDER_API = {
 };
 export const AUTH_API = {
+  LOGIN: "/signin"
 };
