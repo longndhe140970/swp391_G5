@@ -7,11 +7,6 @@ const LoginForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const [loginData, setLoginData] = useState({
-        username: "",
-        password: ""
-    });
-
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
     };
@@ -24,15 +19,20 @@ const LoginForm = () => {
         event.preventDefault();
 
         try {
+
             const dataResponse = await sendRequest({
                 method: 'POST',
                 endpoint: `${AUTH_API.LOGIN}`,
-                data: loginData
+                data: {
+                    username: username,
+                    password: password
+                }
             });
             console.log(dataResponse);
 
         } catch (error) {
-            customToast({ type: "error", message: "Dang nhap khong thanh cong" });
+            const errorMessage = error?.response?.data?.message;
+            customToast({ type: "error", message: errorMessage ?? "Dang nhap khong thanh cong" });
         }
     }
 

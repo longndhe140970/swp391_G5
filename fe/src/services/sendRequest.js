@@ -1,24 +1,24 @@
-import axios from "axios";
 import { API_URL } from "./constant";
+import customAxios from "./customAxios";
+
+export const sendRequest = async ({ method, endpoint, data, ...remains }) => {
+  return await customAxios({
+    method: method?.toLowerCase(),
+    url: `${API_URL}${endpoint}`,
+    data,
+    ...remains,
+  });
+};
 
 // export const sendRequest = async ({ method, endpoint, data, ...remains }) => {
-//   return axios.create({
+//   // try {
+//   return customAxios.create({
 //     method: method?.toLowerCase(),
 //     url: `${API_URL}${endpoint}`,
 //     data,
-//     ...remains,
+//     remains,
 //   });
+//   // } catch (error) {
+//   //   throw error;
+//   // }
 // };
-
-export const sendRequest = async ({ method, endpoint, data }) => {
-  try {
-    const response = await axios({
-      method: method?.toLowerCase(),
-      url: `${API_URL}${endpoint}`,
-      data,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
