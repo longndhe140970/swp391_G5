@@ -17,13 +17,13 @@ const { Sider, Content } = Layout;
 const contentStyle = {
   textAlign: 'center',
   minHeight: '120px',
-  lineHeight: '120px',
+  lineHeight: '80px',
   backgroundColor: '#fff',
 };
 const siderStyle = {
   paddingLeft: '20px',
   textAlign: 'center',
-  lineHeight: '120px',
+  lineHeight: '60px',
   backgroundColor: '#fff',
 };
 
@@ -210,9 +210,7 @@ const SearchBookPage = () => {
             </div>
           </div>
         </Content>
-
       </Layout>
-
     </MainLayput>
   </>);
 }
