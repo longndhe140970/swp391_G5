@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout } from "antd";
-import MainLayput from "../../layout/MainLayout";
+import MainLayout from "../../layout/MainLayout";
 import Menuside from "./Components/MenuSide";
 import { useEffect, useState } from "react";
 import usePopupStore from "../../stores/usePopupStore";
@@ -86,7 +86,7 @@ const SearchBookPage = () => {
   }, [searchData, indexPage]);
 
   return (<>
-    <MainLayput>
+    <MainLayout>
       <Layout>
         <Sider style={siderStyle} width="15%">
           {/* <Menuside searchData={searchData} setSearchData={setSearchData} listPublisher={listPublisher} listAuthor={listAuthor} listLanguage={listLanguage} listCategory={listCategory} /> */}
@@ -211,7 +211,7 @@ const SearchBookPage = () => {
           </div>
         </Content>
       </Layout>
-    </MainLayput>
+    </MainLayout>
   </>);
 }
 

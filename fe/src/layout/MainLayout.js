@@ -8,14 +8,14 @@ const layoutStyle = {
   maxWidth: '100%',
 };
 
-const MainLayput = ({ children }) => {
+const MainLayout = ({ children }) => {
   return (<>
     <Layout style={layoutStyle}>
       <Header />
-      <div className="w-full min-h-screen bg-white">{children}</div>
+      <div className="w-full min-h-screen bg-white h-[1px]">{children}</div>
       <Footer />
     </Layout>
   </>);
 }
 
-export default MainLayput;
+export default MainLayout;
