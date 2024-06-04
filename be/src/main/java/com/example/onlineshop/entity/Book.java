@@ -12,6 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -68,4 +70,12 @@ public class Book {
 	@JoinColumn(name = "language_id", nullable = false)
 	Language language;
 
+	@OneToMany(mappedBy = "book")
+	private List<Favorite> favorites;
+
+	@OneToOne(mappedBy = "book")
+	private CartItem cartItem;
+
+	@OneToOne(mappedBy = "book")
+	private OrderItem orderItem;
 }
