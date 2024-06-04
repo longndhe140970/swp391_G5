@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+
 @RestControllerAdvice
 public class GlobalException {
 
@@ -32,4 +33,9 @@ public class GlobalException {
 		return new ExceptionResponse(HttpStatus.NO_CONTENT.value(), ex.getMessage());
 	}
 
+	@ExceptionHandler(AuthException.class)
+    @ResponseStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
+    public ErrorResponse handlerAuthException(AuthException ex, WebRequest req) {
+        return new ErrorResponse(HttpStatus.NON_AUTHORITATIVE_INFORMATION, ex.getMessage());
+    }
 }
