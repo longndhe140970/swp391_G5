@@ -12,7 +12,7 @@ const MainLayout = ({ children }) => {
   return (<>
     <Layout style={layoutStyle}>
       <Header />
-      <div className="w-full min-h-screen bg-white h-[1px]">{children}</div>
+      <div className="w-full min-h-screen bg-white">{children}</div>
       <Footer />
     </Layout>
   </>);

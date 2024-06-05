@@ -172,7 +172,11 @@ const SearchBookPage = () => {
                 ))}
               </>
             </MenuSection>
-            <MenuSection title={"Nha xuat ban"}>
+            <MenuSection title={"Nha xuat ban"}
+              style={{
+                borderBottom: "none"
+              }}
+            >
               <>
                 {listPublisher?.map?.((publisher) => (
                   <CheckBox
@@ -192,9 +196,9 @@ const SearchBookPage = () => {
                 ))}
               </>
             </MenuSection>
-            <MenuSection title={"Gia"}>
+            {/* <MenuSection title={"Gia"}>
 
-            </MenuSection>
+            </MenuSection> */}
           </>
         </Sider>
         <Content style={contentStyle}>
