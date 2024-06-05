@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout } from "antd";
-import MainLayput from "../../layout/MainLayout";
+import MainLayout from "../../layout/MainLayout";
 import Menuside from "./Components/MenuSide";
 import { useEffect, useState } from "react";
 import usePopupStore from "../../stores/usePopupStore";
@@ -86,7 +86,7 @@ const SearchBookPage = () => {
   }, [searchData, indexPage]);
 
   return (<>
-    <MainLayput>
+    <MainLayout>
       <Layout>
         <Sider style={siderStyle} width="15%">
           {/* <Menuside searchData={searchData} setSearchData={setSearchData} listPublisher={listPublisher} listAuthor={listAuthor} listLanguage={listLanguage} listCategory={listCategory} /> */}
@@ -172,7 +172,11 @@ const SearchBookPage = () => {
                 ))}
               </>
             </MenuSection>
-            <MenuSection title={"Nha xuat ban"}>
+            <MenuSection title={"Nha xuat ban"}
+              style={{
+                borderBottom: "none"
+              }}
+            >
               <>
                 {listPublisher?.map?.((publisher) => (
                   <CheckBox
@@ -192,9 +196,9 @@ const SearchBookPage = () => {
                 ))}
               </>
             </MenuSection>
-            <MenuSection title={"Gia"}>
+            {/* <MenuSection title={"Gia"}>
 
-            </MenuSection>
+            </MenuSection> */}
           </>
         </Sider>
         <Content style={contentStyle}>
@@ -211,7 +215,7 @@ const SearchBookPage = () => {
           </div>
         </Content>
       </Layout>
-    </MainLayput>
+    </MainLayout>
   </>);
 }
 

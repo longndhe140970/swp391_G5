@@ -8,7 +8,7 @@ const layoutStyle = {
   maxWidth: '100%',
 };
 
-const MainLayput = ({ children }) => {
+const MainLayout = ({ children }) => {
   return (<>
     <Layout style={layoutStyle}>
       <Header />
@@ -18,4 +18,4 @@ const MainLayput = ({ children }) => {
   </>);
 }
 
-export default MainLayput;
+export default MainLayout;
