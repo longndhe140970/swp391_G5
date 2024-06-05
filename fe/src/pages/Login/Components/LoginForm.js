@@ -2,8 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { sendRequest } from '../../../services/sendRequest';
 import { AUTH_API } from '../../../services/constant';
 import { customToast } from '../../../toasts';
+import { useNavigate } from 'react-router-dom';
+import useAuthStore from '../../../stores/useAuthStore';
+import { setLocalStorageKey } from '../../../utils/utils';
+import { TOKEN_EXPIRED_TIME, TOKEN_STORAGE } from '../../../utils/constants';
+import { USER_ROLE } from '../../../roles';
 
 const LoginForm = () => {
+    const navigate = useNavigate();
+    const { setUser } = useAuthStore();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -28,8 +35,38 @@ const LoginForm = () => {
                     password: password
                 }
             });
-            console.log(dataResponse);
 
+            const statusCode = dataResponse?.status;
+            if (statusCode === 200) {
+                const responseData = dataResponse?.data?.data || {};
+                const userData = responseData?.user || {};
+                const userId = responseData?.userID;
+                const userRole = userData?.role;
+                setUser({
+                    ...userData,
+                    userID: userId,
+                    roles: userData?.role,
+                });
+                const { token, expireDate } = dataResponse?.data?.data;
+                setLocalStorageKey(TOKEN_STORAGE, token?.replace("Bearer ", ""));
+                setLocalStorageKey(TOKEN_EXPIRED_TIME, expireDate);
+                customToast({
+                    type: "success",
+                    message: "Đăng nhập thành công",
+                });
+
+                if (userRole === USER_ROLE.ROLE_EMPLOYEE) {
+                    navigate("/employee/customer/list");
+                } else {
+                    navigate("/cart");
+                }
+            } else {
+                const errorMessage = dataResponse?.data?.error || "Đăng nhập thất bại";
+                customToast({
+                    type: "error",
+                    message: errorMessage,
+                });
+            }
         } catch (error) {
             const errorMessage = error?.response?.data?.message;
             customToast({ type: "error", message: errorMessage ?? "Dang nhap khong thanh cong" });

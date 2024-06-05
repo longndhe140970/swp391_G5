@@ -1,9 +1,11 @@
+import { Card } from "antd";
 import React from "react";
 
+const { Meta } = Card;
 const BookCardV2 = ({ item, handleTitleOnClick, ...props }) => {
   return (
     <>
-      <div
+      {/* <div
         className={`w-[100%] bg-white rounded-md shadow-2xl mb-[20px] min-h-[360px] relative flex flex-col ${!item?.copies_available && "opacity-30"
           }`}
       >
@@ -23,17 +25,29 @@ const BookCardV2 = ({ item, handleTitleOnClick, ...props }) => {
             {item?.description}
           </p>
         </div>
-        {/* <div className="bg-[#ffedd5] mt-[30px] w-[100%] flex bottom-0 h-[10%] py-[5px]">
-          <div className="w-[50%] flex justify-center items-center">
-            <div className="w-[20px] h-[20px] bg-green-500 mr-[5px] rounded-[50px]"></div>
-            {item?.like || 0}
-          </div>
-          <div className="w-[50%] text-center flex justify-center items-center">
-            <div className="w-[20px] h-[20px] bg-red-500 mr-[5px] rounded-[50px]"></div>
-            {item?.dislike || 0}
-          </div>
-        </div> */}
-      </div>
+      </div> */}
+      <Card
+        hoverable
+        style={{
+          width: 240,
+          opacity: !item?.copies_available && "0.3"
+        }}
+        onClick={handleTitleOnClick}
+        cover={
+          <img alt={item?.title} src={item?.imageUrl} className="max-h-[240px]" />
+        }
+      >
+        <Meta
+          title={<h3 className="font-bold text-[20px]">{item?.title}</h3>}
+          description={
+            <p className="text-[16px]">
+              {item.description.length > 35
+                ? `${item.description.slice(0, 35) + "..."}`
+                : item.description}
+            </p>
+          }
+        />
+      </Card>
     </>
   );
 };

@@ -1,3 +1,4 @@
+import CartPage from "../pages/Cart";
 import HomePage from "../pages/Home";
 import LoginPage from "../pages/Login/LoginPage";
 import ProfilePage from "../pages/Profile";
@@ -19,5 +20,9 @@ export const ConfigRotues = [
   {
     path: "/profile",
     page: <ProfilePage />
+  },
+  {
+    path: "/cart",
+    page: <CartPage />
   },
 ]
