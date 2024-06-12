@@ -3,6 +3,7 @@ import HomePage from "../pages/Home";
 import LoginPage from "../pages/Login/LoginPage";
 import ProfilePage from "../pages/Profile";
 import SearchBookPage from "../pages/SearchBook";
+import SignUpPage from "../pages/SignUpPage";
 
 
 export const ConfigRotues = [
@@ -16,6 +17,10 @@ export const ConfigRotues = [
   {
     path: "/search",
     page: <SearchBookPage />
+  },
+  {
+    path: "/signup",
+    page: <SignUpPage/>
   },
   {
     path: "/profile",
