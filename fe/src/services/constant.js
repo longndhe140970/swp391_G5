@@ -17,5 +17,6 @@ export const CART_API = {
   CART_ADD: "/api/carts/add",
 };
 export const AUTH_API = {
-  LOGIN: "/api/auth/signin"
+  LOGIN: "/api/auth/signin",
+  SIGNUP: "/api/auth/signup"
 };
