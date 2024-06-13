@@ -1,8 +1,10 @@
+import BookDetailPage from "../pages/BookDetail/BookDetailPage";
 import CartPage from "../pages/Cart";
 import HomePage from "../pages/Home";
 import LoginPage from "../pages/Login/LoginPage";
 import ProfilePage from "../pages/Profile";
 import SearchBookPage from "../pages/SearchBook";
+import SignUpPage from "../pages/SignUpPage";
 
 
 export const ConfigRotues = [
@@ -18,11 +20,19 @@ export const ConfigRotues = [
     page: <SearchBookPage />
   },
   {
+    path: "/signup",
+    page: <SignUpPage/>
+  },
+  {
     path: "/profile",
     page: <ProfilePage />
   },
   {
     path: "/cart",
     page: <CartPage />
+  },
+  {
+    path: "/bookdetail",
+    page: <BookDetailPage />
   },
 ]
