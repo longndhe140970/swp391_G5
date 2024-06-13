@@ -35,7 +35,7 @@ public class CartController {
 	private CartItemService cartItemService;
 
 	@GetMapping("")
-	@PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_EMPLOYEE')")
+	@PreAuthorize("hasRole('ROLE_CUSTOMER')")
 	public ResponseEntity<?> findUserCartHandler() {
 
 		Long userId = SecurityUtils.getPrincipal().getId();
@@ -50,7 +50,7 @@ public class CartController {
 	}
 
 	@PutMapping("/add")
-	@PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_EMPLOYEE')")
+	@PreAuthorize("hasRole('ROLE_CUSTOMER')")
 	public ResponseEntity<ResponseMessage> addItemToCart(@RequestBody AddItemRequest req) {
 
 		Long userId = SecurityUtils.getPrincipal().getId();
