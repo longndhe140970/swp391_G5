@@ -43,7 +43,7 @@ const EmplPublisherPage = () => {
   return (<>
     <ManagerLayout>
       <TitlePage
-        title="Danh sách nha xuat ban"
+        title="Danh sách nhà xuất bản"
         rightComponent={
           <ButtonCustom onClick={() => navigate(DEFINE_ROUTES_EMPL.EMPL_BOOK_ADD)}>
             Thêm nha xuat ban

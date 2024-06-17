@@ -5,7 +5,7 @@ export const getTableConfig = () => {
   return [
     { title: "STT", dataIndex: "stt", width: "5%" },
     {
-      title: "ma don",
+      title: "Mã đơn",
       dataIndex: "codeOrder",
       width: "20%",
       render: (text, record) =>
@@ -15,7 +15,7 @@ export const getTableConfig = () => {
         ),
     },
     {
-      title: "Thoi gian",
+      title: "Thời gian",
       dataIndex: "createAt",
       width: "15%",
     },

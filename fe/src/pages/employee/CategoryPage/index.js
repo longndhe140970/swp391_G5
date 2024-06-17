@@ -43,10 +43,10 @@ const EmplCategoryPage = () => {
   return (<>
     <ManagerLayout>
       <TitlePage
-        title="Danh sách danh muc"
+        title="Danh sách danh mục"
         rightComponent={
           <ButtonCustom onClick={() => navigate(DEFINE_ROUTES_EMPL.EMPL_BOOK_ADD)}>
-            Thêm danh muc
+            Thêm danh mục
           </ButtonCustom>
         }
       />

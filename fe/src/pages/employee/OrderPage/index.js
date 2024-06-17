@@ -46,10 +46,10 @@ const EmplOrderPage = () => {
   return (<>
     <ManagerLayout>
       <TitlePage
-        title="Danh sách don hang"
+        title="Danh sách đơn hàng"
         rightComponent={
           <ButtonCustom onClick={() => navigate(DEFINE_ROUTES_EMPL.EMPL_BOOK_ADD)}>
-            Thêm don
+            Thêm đơn
           </ButtonCustom>
         }
       />

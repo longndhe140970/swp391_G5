@@ -5,7 +5,7 @@ export const getTableConfig = () => {
   return [
     { title: "STT", dataIndex: "stt", width: "5%" },
     {
-      title: "Tên danh muc",
+      title: "Tên danh mục",
       dataIndex: "name",
       width: "20%",
       render: (text, record) =>

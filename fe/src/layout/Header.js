@@ -1,12 +1,12 @@
 import { isEmpty, set } from "lodash";
 import React, { useEffect, useState } from "react";
 import {
-  AiFillFacebook,
-  AiFillInstagram,
-  AiFillTwitterSquare,
-  AiOutlineMenu,
-  AiOutlineSearch,
-  AiOutlineShoppingCart,
+    AiFillFacebook,
+    AiFillInstagram,
+    AiFillTwitterSquare,
+    AiOutlineHeart,
+    AiOutlineMenu,
+    AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/useAuthStore";
@@ -14,81 +14,90 @@ import useSearchStore from "../stores/useSearchStore";
 import useLogout from "../hooks/useLogout";
 import ButtonV2 from "../components/Button/ButtonV2";
 const headerStyle = {
-  textAlign: 'center',
-  color: '#fff',
-  height: 64,
-  paddingInline: 48,
-  backgroundColor: '#1B3764',
-  paddingTop: 10,
+    textAlign: 'center',
+    color: '#fff',
+    height: 64,
+    paddingInline: 48,
+    backgroundColor: '#1B3764',
+    paddingTop: 10,
 };
 
 const Header = () => {
 
-  const location = useLocation();
-  const [menu, setMenu] = useState(false);
-  const { user, setUser } = useAuthStore();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { searchData, setSearchData } = useSearchStore();
-  const [searchDataNavBar, setSearchDataNavbar] = useState(searchData?.title);
+    const location = useLocation();
+    const [menu, setMenu] = useState(false);
+    const { user, setUser } = useAuthStore();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const { searchData, setSearchData } = useSearchStore();
+    const [searchDataNavBar, setSearchDataNavbar] = useState(searchData?.title);
 
-  const handleChange = () => {
-    setMenu(!menu);
-  };
-  const { handleLogout } = useLogout();
-  const navigate = useNavigate();
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const handleChange = () => {
+        setMenu(!menu);
+    };
+    const { handleLogout } = useLogout();
+    const navigate = useNavigate();
+    const [isSearchVisible, setIsSearchVisible] = useState(false);
 
-  const handleSearchClick = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
-  useEffect(() => {
-    setSearchData(location?.state?.title);
-  }, []);
+    const handleSearchClick = () => {
+        setIsSearchVisible(!isSearchVisible);
+    };
+    useEffect(() => {
+        setSearchData(location?.state?.title);
+    }, []);
 
-  return (<>
-    <div style={headerStyle}>
+    return (<>
+        <div style={headerStyle}>
 
-      <div className="flex items-center justify-between px-5 lg:px-32">
-        <div className="flex items-center">
-          <Link to="/" className="mr-6 text-2xl font-semibold">
-            LMS
-          </Link>
-          <a className="mr-4">
-            <AiFillFacebook size={30} />
-          </a>
-          <a className="mr-4">
-            <AiFillTwitterSquare size={30} />
-          </a>
-          <a href="" className="mr-4">
-            <AiFillInstagram size={30} />
-          </a>
-        </div>
+            <div className="flex items-center justify-between px-5 lg:px-32">
+                <div className="flex items-center">
+                    <Link to="/" className="mr-6 text-2xl font-semibold">
+                        LMS
+                    </Link>
+                    <a className="mr-4">
+                        <AiFillFacebook size={30} />
+                    </a>
+                    <a className="mr-4">
+                        <AiFillTwitterSquare size={30} />
+                    </a>
+                    <a href="" className="mr-4">
+                        <AiFillInstagram size={30} />
+                    </a>
+                </div>
 
-        <nav className="items-center hidden lg:flex">
-          <Link to="/home" className="mx-3 hover:text-blue-300">
-            Trang chủ
-          </Link>
-          <Link to="/search-book-page" className="mx-3 hover:text-blue-300">
-            Tìm kiếm sách
-          </Link>
-          <Link to="/about" className="mx-3 hover:text-blue-300">
-            Về chúng tôi
-          </Link>
-          <Link to="/services" className="mx-3 hover:text-blue-300">
-            Dịch vụ
-          </Link>
-          <div className="flex items-center ml-3">
-            {isEmpty(user) ? (
-              <Link to="/login" className="mr-3">
-                <AiOutlineShoppingCart size={22} />
-              </Link>
-            ) : (
-              <Link to="/cart" className="mr-3">
-                <AiOutlineShoppingCart size={22} />
-              </Link>
-            )}
+                <nav className="items-center hidden lg:flex">
+                    <Link to="/" className="mx-3 hover:text-blue-300">
+                        Trang chủ
+                    </Link>
+                    <Link to="/search" className="mx-3 hover:text-blue-300">
+                        Tìm kiếm sách
+                    </Link>
+                    <Link to="/about" className="mx-3 hover:text-blue-300">
+                        Về chúng tôi
+                    </Link>
+                    <Link to="/services" className="mx-3 hover:text-blue-300">
+                        Dịch vụ
+                    </Link>
+                    <div className="flex items-center ml-3">
+                        {isEmpty(user) ? (<>
+                            <Link to="/login" className="mr-3">
+                                <AiOutlineShoppingCart size={22} />
+                            </Link>
+                            <Link to="/login" className="mr-3">
+                                <AiOutlineHeart size={22} />
+                            </Link>
+                        </>
 
-            {/* <div class="relative text-black">
+                        ) : (<>
+                            <Link to="/cart" className="mr-3">
+                                <AiOutlineShoppingCart size={22} />
+                            </Link>
+                            <Link to="/favorite" className="mr-3">
+                                <AiOutlineHeart size={22} />
+                            </Link>
+                            </>
+                        )}
+
+                        {/* <div class="relative text-black">
               <button class="absolute left-2 -translate-y-1/2 top-1/2 p-1" onClick={() => {
                 setSearchData({ title: searchDataNavBar });
                 navigate(`/search-book`);
@@ -142,7 +151,7 @@ const Header = () => {
 
 
 
-            {/* {isSearchVisible && (
+                        {/* {isSearchVisible && (
               <div className="absolute flex items-center justify-center p-2 mt-2 bg-white border border-gray-300 rounded top-14 right-32">
                 <input
                   type="text"
@@ -162,63 +171,63 @@ const Header = () => {
                 </button>
               </div>
             )} */}
-          </div>
+                    </div>
 
-          {isEmpty(user) ? (
-            <Link to="/login" className="ml-3">
-              <ButtonV2 title="Đăng nhập" />
-            </Link>
-          ) : (
-            <div className="ml-3">
-              <div
-                className="cursor-pointer group-item"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                {user?.username}
-                {isDropdownOpen && (
-                  <div className="absolute p-2 mt-2 text-black bg-white border border-solid rounded top-14 right-32">
-                    <ul>
-                      <li>
-                        <Link to="/profile">Thông tin cá nhân</Link>
-                      </li>
-                      <li className="border border-black"></li>
-                      <li>
-                        <button onClick={handleLogout}>Đăng xuất</button>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
+                    {isEmpty(user) ? (
+                        <Link to="/login" className="ml-3">
+                            <ButtonV2 title="Đăng nhập" />
+                        </Link>
+                    ) : (
+                        <div className="ml-3">
+                            <div
+                                className="cursor-pointer group-item"
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                            >
+                                {user?.username}
+                                {isDropdownOpen && (
+                                    <div className="absolute p-2 mt-2 text-black bg-white border border-solid rounded top-14 right-32">
+                                        <ul>
+                                            <li>
+                                                <Link to="/profile">Thông tin cá nhân</Link>
+                                            </li>
+                                            <li className="border border-black"></li>
+                                            <li>
+                                                <button onClick={handleLogout}>Đăng xuất</button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </nav>
+
+                <div className="block lg:hidden" onClick={handleChange}>
+                    <AiOutlineMenu size={30} />
+                </div>
             </div>
-          )}
-        </nav>
 
-        <div className="block lg:hidden" onClick={handleChange}>
-          <AiOutlineMenu size={30} />
+            <div className={`lg:hidden ${menu ? "block" : "hidden"}`}>
+                <Link to="/" className="block px-4 hover:text-blue-300">
+                    Trang chủ
+                </Link>
+                <Link
+                    to="/search"
+                    className="block px-4 hover:text-blue-300"
+                >
+                    Tìm kiếm sách
+                </Link>
+                <Link to="/courses" className="block px-4 hover:text-blue-300">
+                    Về chúng tôi
+                </Link>
+                <Link to="/reviews" className="block px-4 hover:text-blue-300">
+                    Dịch vụ
+                </Link>
+
+            </div>
         </div>
-      </div>
 
-      <div className={`lg:hidden ${menu ? "block" : "hidden"}`}>
-        <Link to="/" className="block px-4 hover:text-blue-300">
-          Trang chủ
-        </Link>
-        <Link
-          to="/search-book"
-          className="block px-4 hover:text-blue-300"
-        >
-          Tìm kiếm sách
-        </Link>
-        <Link to="/courses" className="block px-4 hover:text-blue-300">
-          Về chúng tôi
-        </Link>
-        <Link to="/reviews" className="block px-4 hover:text-blue-300">
-          Dịch vụ
-        </Link>
-
-      </div>
-    </div>
-
-  </>);
+    </>);
 }
 
 export default Header;

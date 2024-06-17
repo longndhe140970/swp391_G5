@@ -43,7 +43,7 @@ const EmplAuthorPage = () => {
   return (<>
     <ManagerLayout>
       <TitlePage
-        title="Danh sách tac gia"
+        title="Danh sách tác giả"
         rightComponent={
           <ButtonCustom onClick={() => navigate(DEFINE_ROUTES_EMPL.EMPL_BOOK_ADD)}>
             Thêm tac gia
