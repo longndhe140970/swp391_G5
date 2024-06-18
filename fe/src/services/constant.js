@@ -20,3 +20,9 @@ export const AUTH_API = {
   LOGIN: "/api/auth/signin",
   SIGNUP: "/api/auth/signup"
 };
+export const FAVORITE_API = {
+  LIST: "/api/favorite/list",
+  // ADD: "/api/favorite/add",
+  // REMOVE: "/api/favorite/remove"
+  EDIT: "/api/favorite/edit"
+}

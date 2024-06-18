@@ -2,6 +2,8 @@ import AdminAccountPage from "../pages/AdminAccount";
 import BookDetailPage from "../pages/BookDetail/BookDetailPage";
 import CartPage from "../pages/Cart";
 import DashBoardPage from "../pages/Dashboard";
+import FavoritePage from "../pages/Favorite";
+import HistoryPage from "../pages/History";
 import HomePage from "../pages/Home";
 import LoginPage from "../pages/Login/LoginPage";
 import ProfilePage from "../pages/Profile";
@@ -42,6 +44,14 @@ export const ConfigRotues = [
   {
     path: "/book-detail",
     page: <BookDetailPage />
+  },
+  {
+    path: "/favorite",
+    page: <FavoritePage />
+  },
+  {
+    path: "/history",
+    page: <HistoryPage />
   },
   {
     path: DEFINE_ROUTES_ADMIN.ADMIN_DASHBOARD,

@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 import { FaRegHeart } from "react-icons/fa";
 import ReadMore from "../../../components/ReadMore";
 import { Rate } from "antd";
+import { sendRequest } from "../../../services/sendRequest";
+import { FAVORITE_API } from "../../../services/constant";
+import { customToast } from "../../../toasts";
 
 const BookDetailComponent = ({ item }) => {
 
@@ -22,8 +25,24 @@ const BookDetailComponent = ({ item }) => {
 
   };
   const handleFavorite = async () => {
-
+    try {
+      const dataResponse = await sendRequest({
+        method: "PUT",
+        endpoint: `${FAVORITE_API.EDIT}`,
+        data: {
+          bookId: item?.bookId,
+          favorite: !like
+        }
+      });
+      if (dataResponse.status >= 200 || dataResponse.status < 300) {
+        customToast({ type: "success", message: dataResponse.data.message || "Thành công" });
+        setLike(!like);
+      }
+    } catch (error) {
+      customToast({ type: "error", message: error?.message || "Lỗi" });
+    }
   };
+
   return (<>
     <div className="flex flex-wrap gap-8">
       <div className="w-[30%] ml-[20px]">

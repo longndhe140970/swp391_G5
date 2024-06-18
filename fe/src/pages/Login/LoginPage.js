@@ -61,7 +61,7 @@ const LoginPage = () => {
                 if (userRole === USER_ROLE.ROLE_EMPLOYEE) {
                     navigate("/employee/customer/list");
                 } else {
-                    navigate("/cart");
+                    navigate("/");
                 }
             } else {
                 const errorMessage = dataResponse?.data?.error || "Đăng nhập thất bại";
@@ -81,35 +81,31 @@ const LoginPage = () => {
             <Header />
             <div class="flex flex-col items-center justify-center w-full h-[70vh] ">
                 <div class="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Login</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Đăng nhập</h2>
                     <form class="flex flex-col" onSubmit={handleFormSubmit}>
                         <input
                             type="text"
                             class="bg-gray-100 text-gray-900 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-                            placeholder="Username"
+                            placeholder="Tên đăng nhập"
                             value={username}
                             onChange={handleUsernameChange}
                         />
                         <input
                             type="password"
                             class="bg-gray-100 text-gray-900 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-                            placeholder="Password"
+                            placeholder="Mật khẩu"
                             value={password}
                             onChange={handlePasswordChange}
                         />
                         <div class="flex items-center justify-between flex-wrap">
-                            <label for="remember-me" class="text-sm text-gray-900 cursor-pointer">
-                                <input type="checkbox" id="remember-me" class="mr-2" />
-                                Remember me
-                            </label>
-                            <a href="#" class="text-sm text-blue-500 hover:underline mb-0.5">Forgot password?</a>
-                            <p class="text-gray-900 mt-4"> Don't have an account? <a href="#" class="text-sm text-blue-500 -200 hover:underline mt-4">Signup</a></p>
+                            <a href="#" class="text-sm text-blue-500 hover:underline mb-0.5 mt-4">Quên mật khẩu?</a>
+                            <p class="text-gray-900 mt-4">Chưa có tài khoản? <a href="/signup" class="text-sm text-blue-500 -200 hover:underline mt-4">Đăng ký</a></p>
                         </div>
                         <button
                             type="submit"
                             class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
                         >
-                            Login
+                            Đăng nhập
                         </button>
                     </form>
                 </div>
