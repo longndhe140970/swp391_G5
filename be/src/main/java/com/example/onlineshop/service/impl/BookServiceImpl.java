@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.onlineshop.dto.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,12 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.example.onlineshop.dto.AuthorDto;
-import com.example.onlineshop.dto.CategoryDto;
-import com.example.onlineshop.dto.CustomPage;
-import com.example.onlineshop.dto.LanguageDto;
-import com.example.onlineshop.dto.PublisherDto;
-import com.example.onlineshop.dto.ViewSearchDto;
 import com.example.onlineshop.entity.Author;
 import com.example.onlineshop.entity.Book;
 import com.example.onlineshop.entity.Category;
@@ -134,6 +129,30 @@ public class BookServiceImpl implements BookService {
 				}
 			}));
 		}
+	}
+
+	@Override
+	public ResponseEntity<ResponseObject>  bookForHome() {
+		List<Book> booksForHome = bookRepository.getBookForHome();
+		List<BookCardDto> bookCardDtos = new  ArrayList<>();
+
+		for (Book book : booksForHome) {
+			BookCardDto bookCardDto = new BookCardDto();
+
+			bookCardDto.setBookId(book.getBookId());
+			bookCardDto.setTitle(book.getTitle());
+			bookCardDto.setDescription(book.getDescription());
+			bookCardDto.setImageUrl(book.getImageUrl());
+			bookCardDto.setPrice(book.getPrice());
+
+			bookCardDtos.add(bookCardDto);
+		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Danh sach cho home", new HashMap<>() {
+			{
+				put("top10BookNew", bookCardDtos);
+			}
+		}));
 	}
 
 }

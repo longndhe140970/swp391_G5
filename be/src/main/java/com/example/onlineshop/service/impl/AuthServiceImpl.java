@@ -1,5 +1,8 @@
 package com.example.onlineshop.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +10,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.example.onlineshop.dto.CustomerDto;
+import com.example.onlineshop.payload.request.EditProfileRequest;
+import com.example.onlineshop.payload.response.ResponseMessage;
+import com.example.onlineshop.utils.SecurityUtils;
+import com.example.onlineshop.utils.Utils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -133,4 +141,54 @@ public class AuthServiceImpl implements AuthService {
 		}
 	}
 
+	@Override
+	public ResponseEntity<ResponseObject> editProfile(EditProfileRequest editProfileRequest) {
+		Long userId = SecurityUtils.getPrincipal().getId();
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new NotFoundException("User not found"));
+
+		UserDetail userDetail = user.getUserDetail();
+
+		if (editProfileRequest.getFullName() == null || editProfileRequest.getFullName().isBlank()) {
+			throw new BadRequestException("Please provide your name");
+		}
+		if (editProfileRequest.getAvatarUrl() == null || editProfileRequest.getAvatarUrl().isBlank()) {
+			throw new BadRequestException("Please provide your avatar URL");
+		}
+
+		// Update fields
+		userDetail.setFullName(editProfileRequest.getFullName());
+		userDetail.setAvatarUrl(editProfileRequest.getAvatarUrl());
+
+
+		String dobStr = editProfileRequest.getDob();
+		String dateString = "1111-11-11";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // Specify the format of the date string
+
+		try {
+			Date date = formatter.parse(dobStr); // Convert string to date
+			System.out.println("Date object: " + date); // Output the date object
+			userDetail.setDob(date);
+		} catch (ParseException e) {
+			e.printStackTrace(); // Handle ParseException if the string cannot be parsed
+		}
+
+
+        user.setUserDetail(userDetail);
+		userRepository.save(user);
+
+		CustomerDto customerDto = new CustomerDto();
+		customerDto.setName(userDetail.getFullName());
+		customerDto.setAvatarUrl(userDetail.getAvatarUrl());
+		customerDto.setDob(userDetail.getDob().toString());
+
+
+
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Cap nhat thanh cong.", new HashMap<>() {
+			{
+				put("CustomerDto", customerDto);
+			}
+		}));
+	}
+	
 }

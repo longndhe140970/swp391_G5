@@ -1,5 +1,6 @@
 package com.example.onlineshop.service;
 
+import com.example.onlineshop.payload.request.EditProfileRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,4 +16,6 @@ public interface AuthService {
 	public ResponseEntity<ResponseObject> login(SignInRequest signInRequest);
 	
 	public ResponseEntity<ResponseObject> register(SignUpRequest signUpRequest);
+
+	public ResponseEntity<ResponseObject> editProfile(EditProfileRequest editProfileRequest);
 }

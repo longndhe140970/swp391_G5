@@ -1,12 +1,9 @@
 package com.example.onlineshop.controller;
 
+import com.example.onlineshop.payload.request.EditProfileRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.onlineshop.payload.request.SignInRequest;
 import com.example.onlineshop.payload.request.SignUpRequest;
@@ -28,5 +25,10 @@ public class AuthController {
 	@PostMapping("signup")
 	public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest){
 		return authService.register(signUpRequest);
+	}
+
+	@PutMapping("edit")
+	public ResponseEntity<?> editProfile(@RequestBody EditProfileRequest editProfileRequest){
+		return authService.editProfile(editProfileRequest);
 	}
 }

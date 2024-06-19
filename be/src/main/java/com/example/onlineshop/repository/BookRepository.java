@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.example.onlineshop.entity.Book;
 
+import java.util.List;
+
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
@@ -42,4 +44,11 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	Page<Book> listSearchFilter(@Param("authorName") String authorName, @Param("categoryName") String categoryName,
 			@Param("publisherName") String publisherName, @Param("bookTitle") String bookTitle,
 			@Param("languageName") String languageName, Pageable pageable);
+
+	@Query(value = "SELECT * FROM book order  by book_id desc limit 10", nativeQuery = true)
+	public List<Book> getBookForHome();
+
+
 }
+
+
