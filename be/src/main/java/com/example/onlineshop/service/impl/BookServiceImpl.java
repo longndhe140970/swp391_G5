@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.onlineshop.dto.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,12 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.example.onlineshop.dto.AuthorDto;
-import com.example.onlineshop.dto.CategoryDto;
-import com.example.onlineshop.dto.CustomPage;
-import com.example.onlineshop.dto.LanguageDto;
-import com.example.onlineshop.dto.PublisherDto;
-import com.example.onlineshop.dto.ViewSearchDto;
 import com.example.onlineshop.entity.Author;
 import com.example.onlineshop.entity.Book;
 import com.example.onlineshop.entity.Category;
@@ -135,5 +130,73 @@ public class BookServiceImpl implements BookService {
 			}));
 		}
 	}
+
+	@Override
+	public ResponseEntity<ResponseObject>  bookForHome() {
+		List<Book> booksForHome = bookRepository.getBookForHome();
+		List<BookCardDto> bookCardDtos = new  ArrayList<>();
+
+		for (Book book : booksForHome) {
+			BookCardDto bookCardDto = new BookCardDto();
+
+			bookCardDto.setBookId(book.getBookId());
+			bookCardDto.setTitle(book.getTitle());
+			bookCardDto.setDescription(book.getDescription());
+			bookCardDto.setImageUrl(book.getImageUrl());
+			bookCardDto.setPrice(book.getPrice());
+
+			bookCardDtos.add(bookCardDto);
+		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Danh sach cho home", new HashMap<>() {
+			{
+				put("top10BookNew", bookCardDtos);
+			}
+		}));
+	}
+
+	@Override
+	public ResponseEntity<ResponseObject> bookDetails(Long bookId) {
+Book book = bookRepository.findById(bookId).orElseThrow(()-> new NotFoundException("không tìm thấy sách"));
+		
+		BookDto bookDto = modelMapper.map(book, BookDto.class);
+		
+		List<String> auListDto = new ArrayList<>();
+		for (Author item : book.getAuthors()) {
+			auListDto.add(item.getName());
+		}
+		bookDto.setAuthors(auListDto);
+		
+		List<String> CategoriesListDto = new ArrayList<>();
+		for (Category item : book.getCategories()) {
+			CategoriesListDto.add(item.getName());
+		}
+		bookDto.setCategories(CategoriesListDto);
+		
+		bookDto.setLanguage(book.getLanguage().getName());
+		
+		bookDto.setPublisher(book.getPublisher().getName());
+		
+		List<BookCardDto> bookDtoRelate = new ArrayList<>();
+		List<Book> relatedBooks = bookRepository.bookRelate(book.getBookId());
+
+		for (Book relatedBook : relatedBooks) {
+		    if (!relatedBook.getBookId().equals(book.getBookId())) {
+		        BookCardDto relatedBookDto = modelMapper.map(relatedBook, BookCardDto.class);
+		        bookDtoRelate.add(relatedBookDto);
+		    }
+		}
+		
+		
+		
+;		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("thông tin sách", new HashMap<>() {{
+			put("book", bookDto);
+			put("bookRelate", bookDtoRelate);
+		}}));
+
+	}
+	
+	
+
 
 }
