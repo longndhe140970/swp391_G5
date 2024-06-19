@@ -48,6 +48,14 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	@Query(value = "SELECT * FROM book order  by book_id desc limit 10", nativeQuery = true)
 	public List<Book> getBookForHome();
 
+	@Query(value = "SELECT book.* FROM book\r\n"
+			+ "INNER JOIN book_category \r\n"
+			+ "ON book.book_id = book_category.book_id\r\n"
+			+ "WHERE book_category.category_id = (SELECT category_id FROM book_category\r\n"
+			+ "WHERE book_id = :bookId \r\n"
+			+ "LIMIT 1)", nativeQuery = true )
+	List<Book> bookRelate(@Param("bookId") Long bookId);
+
 
 }
 

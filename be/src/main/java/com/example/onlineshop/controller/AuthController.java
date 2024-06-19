@@ -3,6 +3,7 @@ package com.example.onlineshop.controller;
 import com.example.onlineshop.payload.request.EditProfileRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.onlineshop.payload.request.SignInRequest;
@@ -31,4 +32,12 @@ public class AuthController {
 	public ResponseEntity<?> editProfile(@RequestBody EditProfileRequest editProfileRequest){
 		return authService.editProfile(editProfileRequest);
 	}
+	
+	@GetMapping("profile")
+	@PreAuthorize
+	("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_EMPLOYEE') or hasRole('ROLE_ADMIN')")
+	public ResponseEntity<?> profile(){
+		return authService.profile();
+	}
+
 }

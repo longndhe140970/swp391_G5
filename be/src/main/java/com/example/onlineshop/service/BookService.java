@@ -14,4 +14,6 @@ public interface BookService {
 	public ResponseEntity<ResponseObject> searchFilter(SearchFilterRequest searchFilterRequest, int indexPage);
 
 	public ResponseEntity<ResponseObject>  bookForHome();
+	
+	public ResponseEntity<ResponseObject> bookDetails(Long bookId);
 }

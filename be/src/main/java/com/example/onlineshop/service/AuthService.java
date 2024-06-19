@@ -18,4 +18,6 @@ public interface AuthService {
 	public ResponseEntity<ResponseObject> register(SignUpRequest signUpRequest);
 
 	public ResponseEntity<ResponseObject> editProfile(EditProfileRequest editProfileRequest);
+	
+	public ResponseEntity<ResponseObject> profile();
 }

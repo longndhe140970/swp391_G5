@@ -30,6 +30,7 @@ import com.example.onlineshop.configuration.jwt.JwtUtils;
 import com.example.onlineshop.configuration.services.UserDetailsImpl;
 import com.example.onlineshop.constant.ERole;
 import com.example.onlineshop.dto.SigninDto;
+import com.example.onlineshop.dto.UserDto;
 import com.example.onlineshop.entity.Role;
 import com.example.onlineshop.entity.User;
 import com.example.onlineshop.entity.UserDetail;
@@ -184,11 +185,23 @@ public class AuthServiceImpl implements AuthService {
 
 
 
-		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Cap nhat thanh cong.", new HashMap<>() {
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Cập nhật thành công.", new HashMap<>() {
 			{
 				put("CustomerDto", customerDto);
 			}
 		}));
 	}
+	
+	@Override
+	public ResponseEntity<ResponseObject> profile() {
+		User user = userRepository.findById(SecurityUtils.getPrincipal().getId()).orElseThrow(()-> new NotFoundException("không tìm thấy người dùng"));
+		
+		UserDto userDto = modelMapper.map(user.getUserDetail(), UserDto.class);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("thông tin cá nhân", new HashMap<>() {{
+			put("user", userDto);
+		}}));
+	}
+
 	
 }

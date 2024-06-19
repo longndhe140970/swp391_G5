@@ -155,4 +155,48 @@ public class BookServiceImpl implements BookService {
 		}));
 	}
 
+	@Override
+	public ResponseEntity<ResponseObject> bookDetails(Long bookId) {
+Book book = bookRepository.findById(bookId).orElseThrow(()-> new NotFoundException("không tìm thấy sách"));
+		
+		BookDto bookDto = modelMapper.map(book, BookDto.class);
+		
+		List<String> auListDto = new ArrayList<>();
+		for (Author item : book.getAuthors()) {
+			auListDto.add(item.getName());
+		}
+		bookDto.setAuthors(auListDto);
+		
+		List<String> CategoriesListDto = new ArrayList<>();
+		for (Category item : book.getCategories()) {
+			CategoriesListDto.add(item.getName());
+		}
+		bookDto.setCategories(CategoriesListDto);
+		
+		bookDto.setLanguage(book.getLanguage().getName());
+		
+		bookDto.setPublisher(book.getPublisher().getName());
+		
+		List<BookCardDto> bookDtoRelate = new ArrayList<>();
+		List<Book> relatedBooks = bookRepository.bookRelate(book.getBookId());
+
+		for (Book relatedBook : relatedBooks) {
+		    if (!relatedBook.getBookId().equals(book.getBookId())) {
+		        BookCardDto relatedBookDto = modelMapper.map(relatedBook, BookCardDto.class);
+		        bookDtoRelate.add(relatedBookDto);
+		    }
+		}
+		
+		
+		
+;		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("thông tin sách", new HashMap<>() {{
+			put("book", bookDto);
+			put("bookRelate", bookDtoRelate);
+		}}));
+
+	}
+	
+	
+
+
 }

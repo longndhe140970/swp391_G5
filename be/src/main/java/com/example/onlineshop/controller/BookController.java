@@ -28,4 +28,10 @@ public class BookController {
 	public ResponseEntity<?>  home(){
 		return bookService.bookForHome();
 	}
+	
+	@GetMapping("book-detail/{bookId}")
+	public ResponseEntity<?> BookDetails(@PathVariable Long bookId) {
+		return bookService.bookDetails(bookId);
+	} 
+
 }
