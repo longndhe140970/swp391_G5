@@ -3,6 +3,7 @@ package com.example.onlineshop.entity;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -34,6 +35,12 @@ public class User {
 	String username;
 	String password;
 
+	@Column(name = "email", length = 50)
+	String email;
+
+	@Column(name = "phone_number", length = 10)
+	String phoneNumber;
+
 	@ManyToOne
 	@JoinColumn(name = "role_id", nullable = false)
 	Role role;
@@ -53,10 +60,10 @@ public class User {
 
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Order> orders;
-	
+
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<OrderItem> orderItems_e;
-	
+
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Order> orders_e;
 }

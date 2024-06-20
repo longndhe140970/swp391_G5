@@ -13,5 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class CreateOrderRequest {
 
 	String fullName;
+	String email;
+	String phoneNumber;
 	List<OrderItemRequest> listOrderItem;
 }
