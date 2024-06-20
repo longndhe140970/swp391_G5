@@ -14,15 +14,13 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-	@Query(value = "SELECT book.* FROM book\r\n"
-			+ "LEFT JOIN book_category bc ON book.book_id = bc.book_id\r\n"
+	@Query(value = "SELECT book.* FROM book\r\n" + "LEFT JOIN book_category bc ON book.book_id = bc.book_id\r\n"
 			+ "LEFT JOIN category ON bc.category_id = category.category_id\r\n"
 			+ "LEFT JOIN book_author ba ON book.book_id = ba.book_id\r\n"
 			+ "LEFT JOIN author ON ba.author_id = author.author_id\r\n"
 			+ "LEFT JOIN publisher ON book.publisher_id = publisher.publisher_id\r\n"
 			+ "LEFT JOIN language ON book.language_id = language.language_id\r\n"
-			+ "WHERE book.copies_available >= 0\r\n"
-			+ "AND (:bookTitle IS NULL OR book.title LIKE %:bookTitle%)\r\n"
+			+ "WHERE book.copies_available >= 0\r\n" + "AND (:bookTitle IS NULL OR book.title LIKE %:bookTitle%)\r\n"
 			+ "AND (:authorName IS NULL OR author.name LIKE %:authorName%)\r\n"
 			+ "AND (:categoryName IS NULL OR category.name LIKE %:categoryName%)\r\n"
 			+ "AND (:publisherName IS NULL OR publisher.name LIKE %:publisherName%)\r\n"
@@ -45,18 +43,16 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 			@Param("publisherName") String publisherName, @Param("bookTitle") String bookTitle,
 			@Param("languageName") String languageName, Pageable pageable);
 
+	@Query(value = "SELECT * From book where book.title Like %:query%", nativeQuery = true)
+	List<Book> findByTitle(@Param("query") String title);
+
 	@Query(value = "SELECT * FROM book order  by book_id desc limit 10", nativeQuery = true)
 	public List<Book> getBookForHome();
 
-	@Query(value = "SELECT book.* FROM book\r\n"
-			+ "INNER JOIN book_category \r\n"
+	@Query(value = "SELECT book.* FROM book\r\n" + "INNER JOIN book_category \r\n"
 			+ "ON book.book_id = book_category.book_id\r\n"
 			+ "WHERE book_category.category_id = (SELECT category_id FROM book_category\r\n"
-			+ "WHERE book_id = :bookId \r\n"
-			+ "LIMIT 1)", nativeQuery = true )
+			+ "WHERE book_id = :bookId \r\n" + "LIMIT 1)", nativeQuery = true)
 	List<Book> bookRelate(@Param("bookId") Long bookId);
 
-
 }
-
-
