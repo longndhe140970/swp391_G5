@@ -1,6 +1,7 @@
 package com.example.onlineshop.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.onlineshop.constant.ERole;
 import com.example.onlineshop.dto.CartItemDto;
 import com.example.onlineshop.dto.OrderDto;
 import com.example.onlineshop.dto.OrderItemDto;
@@ -22,9 +24,12 @@ import com.example.onlineshop.entity.Order;
 import com.example.onlineshop.entity.OrderItem;
 import com.example.onlineshop.entity.Role;
 import com.example.onlineshop.entity.User;
+import com.example.onlineshop.entity.UserDetail;
 import com.example.onlineshop.exception.AuthException;
 import com.example.onlineshop.exception.NotFoundException;
+import com.example.onlineshop.exception.SaveDataException;
 import com.example.onlineshop.payload.request.CreateOrderRequest;
+import com.example.onlineshop.payload.request.OrderItemRequest;
 import com.example.onlineshop.payload.request.SearchTextRequest;
 import com.example.onlineshop.payload.response.ResponseMessage;
 import com.example.onlineshop.payload.response.ResponseObject;
@@ -122,6 +127,107 @@ public class OrderServiceImpl implements OrderService {
 					orderItemRepository.save(savedOrderItem);
 				}
 			}
+
+			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(200, "Tạo đơn mượn thành công"));
+		} else if (role.getName().name().equals("ROLE_EMPLOYEE")) {
+			// create new user with role guest
+			User guest = new User();
+			UserDetail guestDetail = new UserDetail();
+
+			if (orderRequest.getFullName().isBlank() || orderRequest.getFullName().isEmpty()) {
+				throw new SaveDataException("Hãy nhập tên khách hàng");
+			}
+			guestDetail.setFullName(orderRequest.getFullName());
+
+			if (orderRequest.getEmail().isBlank() || orderRequest.getEmail().isEmpty()) {
+				throw new SaveDataException("Hãy nhập Email khách hàng");
+			}
+			guest.setEmail(orderRequest.getEmail());
+
+			if (orderRequest.getPhoneNumber().isBlank() || orderRequest.getPhoneNumber().isEmpty()) {
+				throw new SaveDataException("Hãy nhập số điện thoại khách hàng");
+			}
+
+			guest.setPhoneNumber(orderRequest.getPhoneNumber());
+			Role guestRole = roleRepository.findByName(ERole.ROLE_GUEST)
+					.orElseThrow(() -> new NotFoundException("Không tìm thấy role là guest"));
+//						user.setUserStatus(false);
+			guest.setRole(guestRole);
+			String usernameForGuest = "guest-" + Utils.genCode(6);
+			guest.setUsername(usernameForGuest);
+			guest.setPassword("123@123");
+
+			// check guest existed
+			User userFind = userRepository.getUserByEmail(orderRequest.getEmail());
+
+			User savedGuest = new User();
+			if (Objects.isNull(userFind)) {
+				savedGuest = userRepository.save(guest);
+			}
+
+			// resolve choose book
+			if (orderRequest.getListOrderItem().size() == 0) {
+				throw new SaveDataException("Hãy chọn sách cho khách hàng");
+			}
+
+			// code
+			Order order = new Order();
+
+			String code = Utils.genCode(12);
+			order.setCodeOrder(code);
+			order.setCreatedAt(LocalDateTime.now());
+			order.setOrderStatus(true);
+			order.setEmployee(user);
+			order.setCustomer(savedGuest);
+
+			if (!Objects.isNull(userFind)) {
+				order.setCustomer(userFind);
+			}
+
+			List<OrderItemRequest> listOIRequest = orderRequest.getListOrderItem();
+			double totalPrice = 0;
+			int totalItem = 0;
+			List<OrderItem> listOI = new ArrayList<>();
+
+			// resolve ever item in request
+			for (OrderItemRequest itemRequest : listOIRequest) {
+				Book book = bookRepository.findById(itemRequest.getBookId())
+						.orElseThrow(() -> new NotFoundException("Không tìm thấy id của sách"));
+
+				OrderItem orderItem = new OrderItem();
+
+				Double price = book.getPrice() * itemRequest.getQuantity();
+
+				totalPrice += price;
+
+				orderItem.setPrice(price);
+				orderItem.setQuantity(itemRequest.getQuantity());
+
+				totalItem += itemRequest.getQuantity();
+
+				orderItem.setBook(book);
+				orderItem.setEmployee(user);
+				orderItem.setOrder(order);
+				orderItem.setCustomer(savedGuest);
+				orderItem.setPayed(true);
+
+				if (!Objects.isNull(userFind)) {
+					orderItem.setCustomer(userFind);
+				}
+
+//				orderItemRepository.save(orderItem);
+
+				listOI.add(orderItem);
+
+				// update copies in library
+				book.setCopies_available(book.getCopies_available() - itemRequest.getQuantity());
+
+				bookRepository.save(book);
+			}
+			order.setTotalItem(totalItem);
+			order.setTotalPrice(totalPrice);
+
+			orderRepository.save(order);
 
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(200, "Tạo đơn mượn thành công"));
 		} else {

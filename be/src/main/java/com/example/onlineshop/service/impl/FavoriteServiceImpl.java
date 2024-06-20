@@ -130,7 +130,4 @@ public class FavoriteServiceImpl implements FavoriteService {
 		}
 		return null;
 	}
-
-
-
 }

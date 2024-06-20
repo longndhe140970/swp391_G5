@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.onlineshop.dto.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,18 +16,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.example.onlineshop.dto.AuthorDto;
-import com.example.onlineshop.dto.CategoryDto;
-import com.example.onlineshop.dto.CustomPage;
-import com.example.onlineshop.dto.LanguageDto;
-import com.example.onlineshop.dto.PublisherDto;
-import com.example.onlineshop.dto.ViewSearchDto;
 import com.example.onlineshop.entity.Author;
 import com.example.onlineshop.entity.Book;
 import com.example.onlineshop.entity.Category;
 import com.example.onlineshop.entity.Publisher;
 import com.example.onlineshop.exception.NotFoundException;
 import com.example.onlineshop.payload.request.SearchFilterRequest;
+import com.example.onlineshop.payload.request.SearchTextRequest;
 import com.example.onlineshop.payload.response.ResponseObject;
 import com.example.onlineshop.repository.BookRepository;
 import com.example.onlineshop.service.BookService;
@@ -114,13 +110,13 @@ public class BookServiceImpl implements BookService {
 						.categories(item.getCategories()).build();
 				result.add(itemDto);
 			});
-			//remove duplicate elements
-			List<CategoryDto> menuCa=caDtos.stream().distinct().collect(Collectors.toList());
+			// remove duplicate elements
+			List<CategoryDto> menuCa = caDtos.stream().distinct().collect(Collectors.toList());
 			List<PublisherDto> menuPu = pDtos.stream().distinct().collect(Collectors.toList());
 			List<AuthorDto> menuAu = aDtos.stream().distinct().collect(Collectors.toList());
 			List<LanguageDto> menuLa = lDtos.stream().distinct().collect(Collectors.toList());
-			
-			//set page search
+
+			// set page search
 			CustomPage<ViewSearchDto> pageResponse = new CustomPage<>(result, indexPage, size,
 					listBook.getTotalElements(), listBook.getTotalPages());
 
@@ -134,6 +130,95 @@ public class BookServiceImpl implements BookService {
 				}
 			}));
 		}
+	}
+
+	@Override
+	public ResponseEntity<ResponseObject> bookForHome() {
+		List<Book> booksForHome = bookRepository.getBookForHome();
+		List<BookCardDto> bookCardDtos = new ArrayList<>();
+
+		for (Book book : booksForHome) {
+			BookCardDto bookCardDto = new BookCardDto();
+
+			bookCardDto.setBookId(book.getBookId());
+			bookCardDto.setTitle(book.getTitle());
+			bookCardDto.setDescription(book.getDescription());
+			bookCardDto.setImageUrl(book.getImageUrl());
+			bookCardDto.setPrice(book.getPrice());
+
+			bookCardDtos.add(bookCardDto);
+		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Danh sach cho home", new HashMap<>() {
+			{
+				put("top10BookNew", bookCardDtos);
+			}
+		}));
+	}
+
+	@Override
+	public ResponseEntity<ResponseObject> bookDetails(Long bookId) {
+		Book book = bookRepository.findById(bookId).orElseThrow(() -> new NotFoundException("không tìm thấy sách"));
+
+		BookDto bookDto = modelMapper.map(book, BookDto.class);
+
+		List<String> auListDto = new ArrayList<>();
+		for (Author item : book.getAuthors()) {
+			auListDto.add(item.getName());
+		}
+		bookDto.setAuthors(auListDto);
+
+		List<String> CategoriesListDto = new ArrayList<>();
+		for (Category item : book.getCategories()) {
+			CategoriesListDto.add(item.getName());
+		}
+		bookDto.setCategories(CategoriesListDto);
+
+		bookDto.setLanguage(book.getLanguage().getName());
+
+		bookDto.setPublisher(book.getPublisher().getName());
+
+		List<BookCardDto> bookDtoRelate = new ArrayList<>();
+		List<Book> relatedBooks = bookRepository.bookRelate(book.getBookId());
+
+		for (Book relatedBook : relatedBooks) {
+			if (!relatedBook.getBookId().equals(book.getBookId())) {
+				BookCardDto relatedBookDto = modelMapper.map(relatedBook, BookCardDto.class);
+				bookDtoRelate.add(relatedBookDto);
+			}
+		}
+
+		;
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("thông tin sách", new HashMap<>() {
+			{
+				put("book", bookDto);
+				put("bookRelate", bookDtoRelate);
+			}
+		}));
+
+	}
+
+	@Override
+	public ResponseEntity<ResponseObject> searchFill(SearchTextRequest searchTextRequest) {
+		List<Book> bookList = bookRepository.findByTitle(searchTextRequest.getSearchText());
+
+		List<ViewSearchDto> vDtos = new ArrayList<>();
+		for (Book book : bookList) {
+			ViewSearchDto viewSearchDto = modelMapper.map(book, ViewSearchDto.class);
+			
+			viewSearchDto.setCategories(null);
+			viewSearchDto.setDescription(null);
+			viewSearchDto.setPublisher(null);
+			viewSearchDto.setLanguage(null);
+			
+			vDtos.add(viewSearchDto);
+		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Tìm kiếm thành công", new HashMap<>() {
+			{
+				put("listBook", vDtos);
+			}
+		}));
 	}
 
 }
