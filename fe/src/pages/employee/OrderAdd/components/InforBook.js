@@ -25,7 +25,7 @@ const InforBook = forwardRef((props, ref) => {
     if (!bookSelected.data.length) return setTotal(0)
 
     const _total = bookSelected.data.reduce((acc, item) => {
-      const itemTotal = item.price * item.quantity * item.dateBetween;
+      const itemTotal = item.price * item.quantity;
       return acc + itemTotal;
     }, 0)
 
