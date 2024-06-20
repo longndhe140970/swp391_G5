@@ -9,7 +9,13 @@ const ManagerLayout = ({ children }) => {
   } = theme.useToken();
   return (
     <Layout>
-      <Sider className='w-full'>
+      <Sider className='w-full' style={{
+        overflow: 'auto',
+        height: '100vh',
+        left: 0,
+        top: 0,
+        bottom: 0,
+      }}>
         <SideBar />
       </Sider>
       <Layout>

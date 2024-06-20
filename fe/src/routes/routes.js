@@ -1,3 +1,4 @@
+import TextEditor from "../components/TextArea";
 import AdminAccountPage from "../pages/AdminAccount";
 import BookDetailPage from "../pages/BookDetail/BookDetailPage";
 import CartPage from "../pages/Cart";
@@ -18,6 +19,10 @@ import { DEFINE_ROUTES_EMPL } from "./MenuEmpl";
 export const ConfigRotues = [
   {
     path: "/",
+    page: <HomePage />
+  },
+  {
+    path: "/home",
     page: <HomePage />
   }, {
     path: "/login",
