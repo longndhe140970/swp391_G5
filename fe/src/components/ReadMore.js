@@ -2,6 +2,19 @@ import { useState } from "react";
 
 const ReadMore = ({ data, maxLength = 200, ...props }) => {
   const [collapsed, setCollapsed] = useState(false);
+
+  const parseDescription = (description) => {
+    // Regex to match image URLs
+    const urlRegex = /(https?:\/\/[^ ]*\.(?:gif|png|jpg|jpeg))/g;
+    const parts = description.split(urlRegex);
+    return parts.map((part, index) => {
+      if (urlRegex.test(part)) {
+        return <img src={part} alt="img" style={{ maxWidth: "100%", margin: "10px 0" }} />;
+      }
+      return part;
+    });
+  };
+
   return (<>
     {data?.length > maxLength ? (
       <>
@@ -9,7 +22,7 @@ const ReadMore = ({ data, maxLength = 200, ...props }) => {
           {data?.slice(0, maxLength)}
           {collapsed ? <></> : "..."}
           {collapsed ? (
-            <span>{data?.slice(maxLength, data?.length)}</span>
+            <span>{parseDescription(data?.slice(maxLength, data?.length))} </span>
           ) : (
             <></>
           )}
@@ -28,7 +41,7 @@ const ReadMore = ({ data, maxLength = 200, ...props }) => {
       </>
     ) : (
       <>
-        <div>{data}</div>
+        <div>{parseDescription(data)}</div>
       </>
     )}
   </>);

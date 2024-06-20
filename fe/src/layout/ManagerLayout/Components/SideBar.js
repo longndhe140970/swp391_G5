@@ -14,7 +14,7 @@ const SideBar = () => {
 
   return (
     <>
-      <div className="w-full h-full overflow-auto">
+      <div className="w-full overflow-auto">
         <div className="px-5 py-[10px] flex flex-wrap gap-10 bg-[#1B3764] items-center">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5jTKo4WuNTHYrShmskUJXipMid-jcnrAfAQ&s"

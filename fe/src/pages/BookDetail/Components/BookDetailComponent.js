@@ -22,7 +22,6 @@ const BookDetailComponent = ({ item }) => {
   const handleBorrow = async () => {
   };
   const handleRate = async (rateValue) => {
-
   };
   const handleFavorite = async () => {
     try {
@@ -52,8 +51,8 @@ const BookDetailComponent = ({ item }) => {
           alt={item?.title}
         />
       </div>
-      <div className="ml-[20px] w-[60%] flex gap-10">
-        <div>
+      <div className="ml-[10px] w-[60%] flex gap-10">
+        <div className="w-[65%]">
           <h2 className="text-3xl font-bold">{item?.title}</h2>
           <h3 className="text-3xl pt-[10px] pb-[15px]">{item?.subTitle}</h3>
           <p>
@@ -84,22 +83,30 @@ const BookDetailComponent = ({ item }) => {
           <div className="flex mt-[10px]">
             <p className="mr-[10px]">Đánh giá</p>
             <Rate
+              value={2}
               onChange={(e) => {
                 handleRate(e);
               }}
             />
+            <p className="ml-3">{`(250)`}danh gia</p>
           </div>
-          <div className="flex flex-wrap gap-10 mt-[20px]">
+          <div className=" mt-[10px]">
             <div>
-              <div>
-                <span className="mr-[10px]">Trong kho con:</span>
-                <span className="text-green-500">
-                  {item?.copies_available}
-                </span>
-              </div>
+              <span className="mr-[10px]">Trong kho con:</span>
+              <span className="text-green-500">
+                {item?.copies_available}
+              </span>
             </div>
+          </div>
+          <div className="flex justify-between mt-[20px]">
             <button
-              class="hover:brightness-110 hover:animate-pulse font-bold py-3 px-6 rounded-full bg-gradient-to-r from-orange-200 to-red-500 text-white"
+              class="hover:bg-yellow-600 font-bold rounded-md py-3 px-6 bg-yellow-500 w-[175px] text-white mr-5"
+              onClick={handleBorrow}
+            >
+              Mua ngay
+            </button>
+            <button
+              class="hover:bg-red-600 font-bold rounded-md py-3 px-6 bg-red-500 text-white w-[175px] text-wrap "
               onClick={handleBorrow}
             >
               Them vao gio hang
