@@ -1,6 +1,7 @@
 import { isEmpty } from "lodash";
 import { TOKEN_EXPIRED_TIME } from "./constants";
 import moment from "moment/moment";
+import { Link } from "react-router-dom";
 
 export const b64EncodeUnicode = (str) => window.btoa(str);
 export const b64DecodeUnicode = (str) => window.atob(str);
@@ -33,3 +34,13 @@ export const checkExpiredTime = () => {
   const currentTime = new Date();
   return tokenExpiredTime && !moment(currentTime).isAfter(tokenExpiredTime);
 };
+
+export const renderHyperLink = (text, href) => {
+  return (
+    <Link className="text-cyan-400" to={href}>
+      {text}
+    </Link>
+  );
+};
+
+export const formatCurrency = (val) => val.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })

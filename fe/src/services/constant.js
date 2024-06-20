@@ -1,6 +1,7 @@
 export const API_URL = "http://localhost:8080";
 export const BOOK_API = {
-  SEARCH_BOOK: "/api/book/filter-search"
+  SEARCH_BOOK: "/api/book/filter-search",
+  FILL_SEARCH: "/api/book/search",
 };
 export const PUBLISHER_API = {
 };
@@ -17,5 +18,12 @@ export const CART_API = {
   CART_ADD: "/api/carts/add",
 };
 export const AUTH_API = {
-  LOGIN: "/api/auth/signin"
+  LOGIN: "/api/auth/signin",
+  SIGNUP: "/api/auth/signup"
 };
+export const FAVORITE_API = {
+  LIST: "/api/favorite/list",
+  // ADD: "/api/favorite/add",
+  // REMOVE: "/api/favorite/remove"
+  EDIT: "/api/favorite/edit"
+}

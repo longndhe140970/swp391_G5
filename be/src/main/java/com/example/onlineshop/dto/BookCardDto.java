@@ -23,4 +23,6 @@ public class BookCardDto {
 	double price;
 
 	String imageUrl;
+
+	int copies_available;
 }
