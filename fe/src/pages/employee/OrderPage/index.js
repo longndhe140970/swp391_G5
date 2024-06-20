@@ -48,7 +48,7 @@ const EmplOrderPage = () => {
       <TitlePage
         title="Danh sách đơn hàng"
         rightComponent={
-          <ButtonCustom onClick={() => navigate(DEFINE_ROUTES_EMPL.EMPL_BOOK_ADD)}>
+          <ButtonCustom onClick={() => navigate(DEFINE_ROUTES_EMPL.EMPL_ORDER_ADD)}>
             Thêm đơn
           </ButtonCustom>
         }
