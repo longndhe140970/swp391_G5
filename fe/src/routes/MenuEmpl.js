@@ -4,7 +4,7 @@ export const DEFINE_ROUTES_EMPL = {
   EMPL_BOOK_ADD: "/employee/book/add",
   EMPL_BOOK_DETAIL: "/employee/book/detail",
   EMPL_ORDER_LIST: "/employee/order/list",
-  EMPL_ORDER_ADD: "/employee/order/list",
+  EMPL_ORDER_ADD: "/employee/order/add",
   EMPL_ORDER_DETAIL: "/employee/order/detail",
   EMPL_CATEGORY_LIST: "/employee/category/list",
   EMPL_CATEGORY_ADD: "/employee/category/add",

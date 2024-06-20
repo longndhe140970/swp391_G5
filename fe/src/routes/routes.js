@@ -13,6 +13,7 @@ import SignUpPage from "../pages/SignUpPage";
 import EmplAuthorPage from "../pages/employee/AuthorPage";
 import EmplBookPage from "../pages/employee/BookPage";
 import EmplCategoryPage from "../pages/employee/CategoryPage";
+import EmplOrderAdd from "../pages/employee/OrderAdd";
 import EmplOrderPage from "../pages/employee/OrderPage";
 import EmplPublisherPage from "../pages/employee/PublisherPage";
 import { DEFINE_ROUTES_ADMIN } from "./MenuAdmin";
@@ -85,5 +86,9 @@ export const ConfigRotues = [
   {
     path: DEFINE_ROUTES_EMPL.EMPL_CATEGORY_LIST,
     page: <EmplCategoryPage />
+  },
+  {
+    path: DEFINE_ROUTES_EMPL.EMPL_ORDER_ADD,
+    page: <EmplOrderAdd />
   },
 ]

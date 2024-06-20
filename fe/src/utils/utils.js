@@ -42,3 +42,5 @@ export const renderHyperLink = (text, href) => {
     </Link>
   );
 };
+
+export const formatCurrency = (val) => val.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
