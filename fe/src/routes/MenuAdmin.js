@@ -16,7 +16,7 @@ export const MenuAdmin = [
     activePath: "admin/dashboard"
   },
   {
-    title: "Nhan vien",
+    title: "Nhân viên",
     path: DEFINE_ROUTES_ADMIN.ADMIN_EMPLOYEE,
     activePath: "admin/employee/list"
   },

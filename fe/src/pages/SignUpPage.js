@@ -12,21 +12,21 @@ const SignUpPage = () => {
     e.preventDefault();
     try {
 
-      const dataResponse = await sendRequest({
-        method: 'POST',
-        endpoint: `${AUTH_API.SIGNUP}`,
-        data: {
-          username: username,
-          password: password,
-          fullname: fullname,
-          role: role
-        }
-      });
-      console.log(dataResponse);
+        const dataResponse = await sendRequest({
+            method: 'POST',
+            endpoint: `${AUTH_API.SIGNUP}`,
+            data: {
+                username: username,
+                password: password,
+                fullname: fullname,
+                role: role
+            }
+        });
+        customToast({ type: "success", message:  "Đăng ký thành công" });
 
     } catch (error) {
-      const errorMessage = error?.response?.data?.message;
-      customToast({ type: "error", message: errorMessage ?? "Dang ky khong thanh cong" });
+        const errorMessage = error?.response?.data?.message;
+        customToast({ type: "error", message: errorMessage ?? "Đăng ký không thành công" });
     }
   }
 
