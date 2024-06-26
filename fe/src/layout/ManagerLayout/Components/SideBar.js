@@ -21,7 +21,7 @@ const SideBar = () => {
             className="w-[50px] h-[50px] rounded-[50%]"
             alt="avatar"
           />
-          <span className="font-bold text-white">Xin chao {user?.username}</span>
+          <span className="font-bold text-white">Xin chào {user?.username}</span>
         </div>
         <div className="mt-[20px]">
           {(user?.roles === USER_ROLE.ROLE_EMPLOYEE
