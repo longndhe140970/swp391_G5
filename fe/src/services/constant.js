@@ -6,7 +6,8 @@ export const BOOK_API = {
   ADD: "api/book/add",
   EDIT: "api/book/edit",
   RATE: "/api/book/rate",
-  DETAIL: "/api/book/book-detail"
+  DETAIL: "/api/book/book-detail",
+  BOOK_HOME: "/api/book"
 };
 export const PUBLISHER_API = {
 };
