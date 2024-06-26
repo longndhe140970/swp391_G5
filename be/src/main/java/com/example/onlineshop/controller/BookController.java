@@ -1,7 +1,10 @@
 package com.example.onlineshop.controller;
 
+import com.example.onlineshop.payload.request.BookRequest;
+import com.example.onlineshop.payload.request.RatingRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,4 +47,24 @@ public class BookController {
 		return bookService.bookDetails(bookId);
 	}
 
+	@GetMapping("/list")
+	public ResponseEntity<?> getAllBooks() {
+		return bookService.getAllBooks();
+	}
+
+//	@PostMapping("add")
+//	public ResponseEntity<?> insertBook(@RequestBody BookRequest bookRequest) {
+//		return bookService.addBook(bookRequest);
+//	}
+//
+//	@PutMapping("edit")
+//	public ResponseEntity<?> editBook(@RequestBody BookRequest bookRequest) {
+//		return bookService.editBook(bookRequest);
+//	}
+
+	@PostMapping("/rate")
+	@PreAuthorize("hasRole('ROLE_CUSTOMER')")
+	public ResponseEntity<?> rateBook(@RequestBody RatingRequest ratingRequest) {
+		return bookService.rateBook(ratingRequest);
+	}
 }

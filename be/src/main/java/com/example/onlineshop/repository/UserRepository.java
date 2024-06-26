@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	Boolean existsByPassword(String password);
 
-	User getUserByCodeActive(String otp);
+	//User getUserByCodeActive(String otp);
 
 	User getUserByEmail(String email);
 

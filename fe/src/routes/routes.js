@@ -10,6 +10,7 @@ import LoginPage from "../pages/Login/LoginPage";
 import ProfilePage from "../pages/Profile";
 import SearchBookPage from "../pages/SearchBook";
 import SignUpPage from "../pages/SignUpPage";
+import EmplAddBookPage from "../pages/employee/AddBookPage";
 import EmplAuthorPage from "../pages/employee/AuthorPage";
 import EmplBookPage from "../pages/employee/BookPage";
 import EmplCategoryPage from "../pages/employee/CategoryPage";
@@ -91,4 +92,13 @@ export const ConfigRotues = [
     path: DEFINE_ROUTES_EMPL.EMPL_ORDER_ADD,
     page: <EmplOrderAdd />
   },
+  {
+    path: DEFINE_ROUTES_EMPL.EMPL_BOOK_ADD,
+    page: <EmplAddBookPage />
+  },
+  {
+    path: "/test",
+    page: <TextEditor />
+  },
+
 ]

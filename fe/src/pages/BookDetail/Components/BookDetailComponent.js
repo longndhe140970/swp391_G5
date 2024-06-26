@@ -8,20 +8,36 @@ import { FaRegHeart } from "react-icons/fa";
 import ReadMore from "../../../components/ReadMore";
 import { Rate } from "antd";
 import { sendRequest } from "../../../services/sendRequest";
-import { FAVORITE_API } from "../../../services/constant";
+import { BOOK_API, FAVORITE_API } from "../../../services/constant";
 import { customToast } from "../../../toasts";
 
 const BookDetailComponent = ({ item }) => {
 
   const navigate = useNavigate();
   const { handleOpenLoading, handleCloseLoading } = usePopupStore();
-
+  const [rate, setRate] = useState(0);
   const [like, setLike] = useState(false);
-  useEffect(() => {
-  },);
+  
+
   const handleBorrow = async () => {
   };
   const handleRate = async (rateValue) => {
+    try {
+      const dataResponse = await sendRequest({
+        method: "POST",
+        endpoint: `${BOOK_API.RATE}`,
+        data: {
+          bookId: item?.bookId,
+          rating: rateValue
+        }
+      });
+      setRate(rateValue);
+      if (dataResponse.status >= 200 || dataResponse.status < 300) {
+        customToast({ type: "success", message: dataResponse.data.message || "Thành công" });
+      }
+    } catch (error) {
+      customToast({ type: "error", message: error?.message || "Lỗi" });
+    }
   };
   const handleFavorite = async () => {
     try {
@@ -83,7 +99,7 @@ const BookDetailComponent = ({ item }) => {
           <div className="flex mt-[10px]">
             <p className="mr-[10px]">Đánh giá</p>
             <Rate
-              value={2}
+              value={rate}
               onChange={(e) => {
                 handleRate(e);
               }}
