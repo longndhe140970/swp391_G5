@@ -40,8 +40,6 @@ public class FavoriteController {
     @PutMapping("/edit")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<?> editItemFromFavorite(@RequestBody FavoriteRequest req) {
-        System.out.println(req.getBookId());
-        System.out.println(req.isFavorite());
         return favoriteService.editLikeBookByUser(req);
 
     }

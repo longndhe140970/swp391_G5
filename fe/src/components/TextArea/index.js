@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import 'quill/dist/quill.snow.css'
 import ReactQuill from 'react-quill'
 
-const TextEditor = () => {
+const TextEditor = (onChange) => {
   const [des, setDes] = useState("");
 
   // Custom handler for image insertion
@@ -35,10 +35,10 @@ const TextEditor = () => {
 
   const handleProcedureContentChange = (content, delta, source, editor) => {
 
-    content = `<p>asd azcx</p><p>asd</p><p>asd</p><p><img src="https://static.vecteezy.com/system/resources/thumbnails/004/899/680/small/beautiful-blonde-woman-with-makeup-avatar-for-a-beauty-salon-illustration-in-the-cartoon-style-vector.jpg">adxzczxc saxczvc bxfc</p><p>hfg</p><p>hm<img src="https://static.vecteezy.com/system/resources/thumbnails/004/899/680/small/beautiful-blonde-woman-with-makeup-avatar-for-a-beauty-salon-illustration-in-the-cartoon-style-vector.jpg">asdc f</p><p>vh</p>`;
+    //content = `<p>asd azcx</p><p>asd</p><p>asd</p><p><img src="https://static.vecteezy.com/system/resources/thumbnails/004/899/680/small/beautiful-blonde-woman-with-makeup-avatar-for-a-beauty-salon-illustration-in-the-cartoon-style-vector.jpg">adxzczxc saxczvc bxfc</p><p>hfg</p><p>hm<img src="https://static.vecteezy.com/system/resources/thumbnails/004/899/680/small/beautiful-blonde-woman-with-makeup-avatar-for-a-beauty-salon-illustration-in-the-cartoon-style-vector.jpg">asdc f</p><p>vh</p>`;
     const arr = parseDescription(content)
-    // console.log('content :>> ', content);
-
+    //console.log('content :>> ', content);
+    console.log(arr);
     console.log('text :>> ', arr.join(" ").replace(/>/g, ''));
   };
 
@@ -61,7 +61,7 @@ const TextEditor = () => {
 
   return (
     <div >
-      <h1 style={{ textAlign: "center" }}>Text Editor In React JS</h1>
+      <h1 style={{ textAlign: "center" }}>Mô tả</h1>
       <div style={{ display: "grid", justifyContent: "center" }}>
         <ReactQuill
           theme="snow"
@@ -69,7 +69,7 @@ const TextEditor = () => {
           formats={formats}
           placeholder="write your content ...."
           onChange={handleProcedureContentChange}
-          style={{ height: "220px", width: "300px" }}
+          style={{ height: "400px", width: "500px" }}
         >
         </ReactQuill>
       </div>

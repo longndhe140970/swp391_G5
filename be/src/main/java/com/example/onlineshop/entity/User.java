@@ -66,4 +66,7 @@ public class User {
 
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Order> orders_e;
+
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private  List<Rating> ratings;
 }

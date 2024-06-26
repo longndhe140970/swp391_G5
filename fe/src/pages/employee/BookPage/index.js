@@ -52,7 +52,7 @@ const EmplBookPage = () => {
       />
       <TableV2
         searchForm={searchForm}
-        searchPlaceholder="Tìm kiếm tên đăng nhập"
+        searchPlaceholder="Tìm kiếm tên sách"
         handleSearchForm={handleSearchForm}
         handleSearch={handleSearch}
         columns={getTableConfig(setTriggerReload)}

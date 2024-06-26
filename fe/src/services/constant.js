@@ -2,6 +2,11 @@ export const API_URL = "http://localhost:8080";
 export const BOOK_API = {
   SEARCH_BOOK: "/api/book/filter-search",
   FILL_SEARCH: "/api/book/search",
+  LIST: "api/book/list",
+  ADD: "api/book/add",
+  EDIT: "api/book/edit",
+  RATE: "/api/book/rate",
+  DETAIL: "/api/book/book-detail",
   BOOK_HOME: "/api/book"
 };
 export const PUBLISHER_API = {
