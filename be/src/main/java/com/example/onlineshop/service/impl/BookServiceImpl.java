@@ -7,6 +7,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.onlineshop.dto.*;
+import com.example.onlineshop.entity.*;
+import com.example.onlineshop.exception.AuthException;
+import com.example.onlineshop.payload.request.RatingRequest;
+import com.example.onlineshop.payload.response.ResponseMessage;
+import com.example.onlineshop.repository.OrderItemRepository;
+import com.example.onlineshop.repository.RatingRepository;
+import com.example.onlineshop.repository.UserRepository;
+import com.example.onlineshop.utils.SecurityUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,10 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.example.onlineshop.entity.Author;
-import com.example.onlineshop.entity.Book;
-import com.example.onlineshop.entity.Category;
-import com.example.onlineshop.entity.Publisher;
 import com.example.onlineshop.exception.NotFoundException;
 import com.example.onlineshop.payload.request.SearchFilterRequest;
 import com.example.onlineshop.payload.request.SearchTextRequest;
@@ -32,6 +36,12 @@ public class BookServiceImpl implements BookService {
 
 	@Autowired
 	private BookRepository bookRepository;
+	@Autowired
+	private OrderItemRepository orderItemRepository;
+	@Autowired
+	private RatingRepository ratingRepository;
+	@Autowired
+	private UserRepository userRepository;
 	@Autowired
 	private ModelMapper modelMapper;
 
@@ -196,6 +206,50 @@ public class BookServiceImpl implements BookService {
 			}
 		}));
 
+	}
+
+	@Override
+	public ResponseEntity<ResponseObject> getAllBooks() {
+		List<Book> bookList = bookRepository.findAll();
+		List<BookDto> dtoList = new ArrayList<>();
+		for (Book book : bookList) {
+			BookDto dto = modelMapper.map(book, BookDto.class);
+			dtoList.add(dto);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Thông tin sách", new HashMap<>() {
+			{
+				put("bookDtoList", dtoList);
+				put("book", bookList);
+			}
+		}));
+	}
+
+	@Override
+	public ResponseEntity<ResponseMessage> rateBook(RatingRequest ratingRequest) {
+		if (SecurityUtils.checkAuth().equals("anonymousUser")) {
+			throw new AuthException("Bạn hãy đăng kí thành viên để đánh giá sách");
+		}
+
+		Long userId = SecurityUtils.getPrincipal().getId();
+
+		OrderItem orderItem = orderItemRepository.findByBookIdAndCustomerId(ratingRequest.getBookId(), userId);
+		if (orderItem == null) {
+			throw new NotFoundException("Bạn chưa mua sản phẩm này");
+		}
+
+		Rating rating = ratingRepository.findByBookIdAndCustomerId(ratingRequest.getBookId(), userId);
+		if (rating == null) {
+			rating = new Rating();
+			User user = userRepository.findUserById(userId);
+			Book book = bookRepository.findById(ratingRequest.getBookId()).orElseThrow(() -> new NotFoundException("ko tim thay sach"));
+			rating.setCustomer(user);
+			rating.setBook(book);
+			rating.setRate(ratingRequest.getRating());
+		}
+		rating.setRate(ratingRequest.getRating());
+		ratingRepository.save(rating);
+
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(200, "Đánh giá thành công"));
 	}
 
 	@Override

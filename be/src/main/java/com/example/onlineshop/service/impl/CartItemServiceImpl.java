@@ -154,7 +154,7 @@ public class CartItemServiceImpl implements CartItemService {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new ResponseMessage(200, "Xoá sản phẩm khỏi giỏ hàng thành công"));
 		} else {
-			throw new NotFoundException("Bạn không thể xóa sản phẩm của người khác");
+			throw new NotFoundException("Bạn không thể xóa sản phẩm");
 		}
 	}
 

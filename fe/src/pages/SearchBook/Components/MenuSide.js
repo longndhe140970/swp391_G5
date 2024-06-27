@@ -38,7 +38,7 @@ const Menuside = ({ listPublisher, listCategory, listLanguage, listAuthor }) => 
         </button>
       </div>
     </MenuSection>
-    <MenuSection title={"Ten danh muc"}>
+    <MenuSection title={"Tên danh mục"}>
       <>
         {listCategory?.map?.((category) => (
           <CheckBox
@@ -58,7 +58,7 @@ const Menuside = ({ listPublisher, listCategory, listLanguage, listAuthor }) => 
         ))}
       </>
     </MenuSection>
-    <MenuSection title={"Ngon ngu"}>
+    <MenuSection title={"Ngôn ngữ"}>
       <>
         {listLanguage?.map?.((language) => (
           <CheckBox
@@ -78,7 +78,7 @@ const Menuside = ({ listPublisher, listCategory, listLanguage, listAuthor }) => 
         ))}
       </>
     </MenuSection>
-    <MenuSection title={"tac gia"}>
+    <MenuSection title={"Tác giả"}>
       <>
         {listAuthor?.map?.((author) => (
           <CheckBox
@@ -98,7 +98,7 @@ const Menuside = ({ listPublisher, listCategory, listLanguage, listAuthor }) => 
         ))}
       </>
     </MenuSection>
-    <MenuSection title={"Nha xuat ban"}>
+    <MenuSection title={"Nhà xuất bản"}>
       <>
         {listPublisher?.map?.((publisher) => (
           <CheckBox
@@ -118,7 +118,7 @@ const Menuside = ({ listPublisher, listCategory, listLanguage, listAuthor }) => 
         ))}
       </>
     </MenuSection>
-    <MenuSection title={"Gia"}>
+    <MenuSection title={"Giá"}>
 
     </MenuSection>
   </>);

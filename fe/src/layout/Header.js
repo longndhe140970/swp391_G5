@@ -78,23 +78,15 @@ const Header = () => {
                         Dịch vụ
                     </Link>
                     <div className="flex items-center ml-3">
-                        {isEmpty(user) ? (<>
+                        {isEmpty(user) ? (
                             <Link to="/login" className="mr-3">
                                 <AiOutlineShoppingCart size={22} />
                             </Link>
-                            <Link to="/login" className="mr-3">
-                                <AiOutlineHeart size={22} />
-                            </Link>
-                        </>
 
-                        ) : (<>
+                        ) : (
                             <Link to="/cart" className="mr-3">
                                 <AiOutlineShoppingCart size={22} />
                             </Link>
-                            <Link to="/favorite" className="mr-3">
-                                <AiOutlineHeart size={22} />
-                            </Link>
-                            </>
                         )}
 
                         {/* <div class="relative text-black">
@@ -189,6 +181,12 @@ const Header = () => {
                                         <ul>
                                             <li>
                                                 <Link to="/profile">Thông tin cá nhân</Link>
+                                            </li>
+                                            <li>
+                                                <Link to="/favorite">Sách yêu thích</Link>
+                                            </li>
+                                            <li>
+                                                <Link to="/history">Lịch sử mua hàng</Link>
                                             </li>
                                             <li className="border border-black"></li>
                                             <li>

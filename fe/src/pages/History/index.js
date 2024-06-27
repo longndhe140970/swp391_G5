@@ -28,7 +28,7 @@ const HistoryPage = () => {
                 setPageSize(size);
                 setTotalItems(totalElements);
             } catch (error) {
-                customToast({ type: "error", message: "Khong tim thay sach" });
+                customToast({ type: "error", message: "Không tìm thấy sách" });
                 setIndexPage(1);
                 setDataBook([]);
                 setPageSize(0);

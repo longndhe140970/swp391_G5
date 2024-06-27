@@ -75,7 +75,7 @@ const SearchBookPage = () => {
         setTotalItems(totalElements);
 
       } catch (error) {
-        customToast({ type: "error", message: "Khong tim thay sach" });
+        customToast({ type: "error", message: "Không tìm thấy sách" });
         setIndexPage(1);
         setDataBook([]);
         setPageSize(0);
@@ -112,7 +112,7 @@ const SearchBookPage = () => {
                 </button>
               </div>
             </MenuSection>
-            <MenuSection title={"Ten danh muc"}>
+            <MenuSection title={"Tên danh mục"}>
               <>
                 {listCategory?.map?.((category) => (
                   <CheckBox
@@ -132,7 +132,7 @@ const SearchBookPage = () => {
                 ))}
               </>
             </MenuSection>
-            <MenuSection title={"Ngon ngu"}>
+            <MenuSection title={"Ngôn ngữ"}>
               <>
                 {listLanguage?.map?.((language) => (
                   <CheckBox
@@ -152,7 +152,7 @@ const SearchBookPage = () => {
                 ))}
               </>
             </MenuSection>
-            <MenuSection title={"tac gia"}>
+            <MenuSection title={"Tác giả"}>
               <>
                 {listAuthor?.map?.((author) => (
                   <CheckBox
@@ -172,7 +172,7 @@ const SearchBookPage = () => {
                 ))}
               </>
             </MenuSection>
-            <MenuSection title={"Nha xuat ban"}
+            <MenuSection title={"Nhà xuất bản"}
               style={{
                 borderBottom: "none"
               }}
