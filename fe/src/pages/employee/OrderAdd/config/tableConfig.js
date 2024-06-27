@@ -47,7 +47,7 @@ export const TableInvoiceAddConfig = (onRemove, updateQuantity) => {
       dataIndex: "price",
       title: "Tổng tiền",
       width: "13%",
-      render: (text, record) => <span>{formatCurrency(text * record.quantity * record.dateBetween)}</span>
+      render: (text, record) => <span>{formatCurrency(record?.price * record.quantity)}</span>
     },
     {
       dataIndex: "bookId",

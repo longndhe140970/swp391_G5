@@ -42,7 +42,7 @@ const BookCardV2 = ({ item, handleTitleOnClick, ...props }) => {
           title={<h3 className="font-bold text-[20px]">{item?.title}</h3>}
           description={
             <p className="text-[16px]">
-              {item?.description.length > 35
+              {item?.description?.length > 35
                 ? `${item?.description.slice(0, 35) + "..."}`
                 : item?.description}
             </p>

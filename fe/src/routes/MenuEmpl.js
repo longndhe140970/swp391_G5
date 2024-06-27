@@ -19,32 +19,32 @@ export const DEFINE_ROUTES_EMPL = {
 
 export const MenuEmpl = [
   {
-    title: "Thong tin",
+    title: "Thông tin",
     path: DEFINE_ROUTES_EMPL.EMPL_INFORMATION,
     activePath: "/employee/information"
   },
   {
-    title: "Don hang",
+    title: "Đơn hàng",
     path: DEFINE_ROUTES_EMPL.EMPL_ORDER_LIST,
     activePath: "/employee/order"
   },
   {
-    title: "Sach",
+    title: "Sách",
     path: DEFINE_ROUTES_EMPL.EMPL_BOOK_LIST,
     activePath: "/employee/book"
   },
   {
-    title: "Nha xuat ban",
+    title: "Nhà xuất bản",
     path: DEFINE_ROUTES_EMPL.EMPL_PUBLISHER_LIST,
     activePath: "/employee/publisher"
   },
   {
-    title: "Tac gia",
+    title: "Tác giả",
     path: DEFINE_ROUTES_EMPL.EMPL_AUTHOR_LIST,
     activePath: "/employee/author"
   },
   {
-    title: "Danh muc",
+    title: "Danh mục",
     path: DEFINE_ROUTES_EMPL.EMPL_CATEGORY_LIST,
     activePath: "/employee/category"
   },
