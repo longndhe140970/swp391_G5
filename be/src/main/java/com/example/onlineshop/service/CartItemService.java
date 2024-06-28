@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.example.onlineshop.entity.Book;
 import com.example.onlineshop.entity.Cart;
 import com.example.onlineshop.entity.CartItem;
-import com.example.onlineshop.payload.request.CartItemRequest;
 import com.example.onlineshop.payload.response.ResponseMessage;
 import com.example.onlineshop.payload.response.ResponseObject;
 
@@ -14,10 +13,9 @@ import com.example.onlineshop.payload.response.ResponseObject;
 public interface CartItemService {
 	public CartItem createCartItem(CartItem cartItem);
 
-	public ResponseEntity<ResponseObject> updateCartItem(Long userId, Long cartItemId, 
+	public ResponseEntity<ResponseObject> updateCartItem(Long userId, Long cartItemId,
 //			CartItemRequest cartItemRequest
-			int quantity
-			);
+			int quantity);
 
 	public CartItem isCartItemExist(Cart cart, Book book, Long userId);
 

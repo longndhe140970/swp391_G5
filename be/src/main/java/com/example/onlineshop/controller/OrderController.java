@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.onlineshop.payload.request.CreateOrderRequest;
+import com.example.onlineshop.payload.request.SearchTextRequest;
 import com.example.onlineshop.service.OrderItemService;
 import com.example.onlineshop.service.OrderService;
 
@@ -50,6 +51,19 @@ public class OrderController {
 	@PreAuthorize("hasRole('ROLE_EMPLOYEE')")
 	public ResponseEntity<?> getDetailOrdersHandler(@PathVariable Long orderId) {
 		return orderService.getOrderDetail(orderId);
+	}
+
+	@GetMapping("")
+	@PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+	public ResponseEntity<?> getAllOrders(@RequestParam("index-page") int indexPage) {
+		return orderService.getAllOrders(indexPage);
+	}
+
+	@PostMapping("/search")
+	@PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+	public ResponseEntity<?> searchOrderByCode(@RequestBody SearchTextRequest nameSearch,
+			@RequestParam("index-page") int indexPage) {
+		return orderService.findOrderByCode(nameSearch, indexPage);
 	}
 
 	@GetMapping("/history")

@@ -11,11 +11,13 @@ import com.example.onlineshop.payload.response.ResponseObject;
 @Service
 public interface CategoryService {
 
-	public ResponseEntity<ResponseMessage> createAuthor(AuthorRequest creatRequest);
+	public ResponseEntity<ResponseMessage> createCategory(AuthorRequest creatRequest);
 
-	public ResponseEntity<ResponseMessage> editAuthor(AuthorRequest creatRequest, Long authorId);
+	public ResponseEntity<ResponseMessage> editCategory(AuthorRequest creatRequest, Long categoryId);
 
-	public ResponseEntity<ResponseObject> searchAuthor(SearchTextRequest searchRequest, int indexPage);
+	public ResponseEntity<ResponseObject> searchCategory(SearchTextRequest searchRequest, int indexPage);
 
-	public ResponseEntity<ResponseObject> listAuthor(int indexPage);
+	public ResponseEntity<ResponseObject> listCategory(int indexPage);
+	
+	public ResponseEntity<ResponseObject> detailCategory(Long categoryId);	
 }

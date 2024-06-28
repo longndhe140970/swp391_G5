@@ -1,7 +1,6 @@
 package com.example.onlineshop.service.impl;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,14 +8,20 @@ import java.util.Objects;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.onlineshop.constant.ERole;
+import com.example.onlineshop.dto.CartDto;
 import com.example.onlineshop.dto.CartItemDto;
+import com.example.onlineshop.dto.CustomPage;
 import com.example.onlineshop.dto.OrderDto;
 import com.example.onlineshop.dto.OrderItemDto;
+import com.example.onlineshop.dto.UserDto;
 import com.example.onlineshop.entity.Book;
 import com.example.onlineshop.entity.Cart;
 import com.example.onlineshop.entity.CartItem;
@@ -82,15 +87,16 @@ public class OrderServiceImpl implements OrderService {
 
 				orderItem.setBook(cartTemp.get(i).getBook());
 				orderItem.setQuantity(cartTemp.get(i).getQuantity());
+				orderItem.setPayed(false);
 
 				orderItem.setCustomer(cartTemp.get(i).getCustomer());
 
 				Double price = cartTemp.get(i).getPrice();
 				orderItem.setPrice(price);
 
-				OrderItem createdOrderItem = orderItemRepository.save(orderItem);
+				// OrderItem createdOrderItem = orderItemRepository.save(orderItem);
 
-				orderItems.add(createdOrderItem);
+				orderItems.add(orderItem);
 			}
 
 			Order createdOrder = new Order();
@@ -118,15 +124,15 @@ public class OrderServiceImpl implements OrderService {
 			cartRepository.save(cart);
 			Order savedOrder = orderRepository.save(createdOrder);
 
-			for (OrderItem item : orderItems) {
-				item.setOrder(savedOrder);
-				OrderItem savedOrderItem = orderItemRepository.findById(item.getOrderItemId())
-						.orElseThrow(() -> new NotFoundException("Không tìm thấy sách trong giỏ hàng"));
-				if (!Objects.isNull(savedOrderItem)) {
-					savedOrderItem.setPayed(false);
-					orderItemRepository.save(savedOrderItem);
-				}
-			}
+//			for (OrderItem item : orderItems) {
+//				item.setOrder(savedOrder);
+//				OrderItem savedOrderItem = orderItemRepository.findById(item.getOrderItemId())
+//						.orElseThrow(() -> new NotFoundException("Không tìm thấy sách trong giỏ hàng"));
+//				if (!Objects.isNull(savedOrderItem)) {
+//					savedOrderItem.setPayed(false);
+//					orderItemRepository.save(savedOrderItem);
+//				}
+//			}
 
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(200, "Tạo đơn mượn thành công"));
 		} else if (role.getName().name().equals("ROLE_EMPLOYEE")) {
@@ -237,8 +243,40 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public ResponseEntity<ResponseObject> findOrderByCode(SearchTextRequest searchRequest, int indexPage) {
-		// TODO Auto-generated method stub
-		return null;
+		int size = 5;
+		int page = indexPage - 1;
+
+		Pageable pageable = PageRequest.of(page, size);
+
+		Page<Order> listOrder = orderRepository.searchByCode(searchRequest.getSearchText(), pageable);
+
+		List<OrderDto> listOrderDto = new ArrayList<>();
+
+		for (Order item : listOrder) {
+
+			OrderDto orderDto = new OrderDto();
+			orderDto.setOrderId(item.getOrderId());
+			orderDto.setTotalPrice(item.getTotalPrice());
+			orderDto.setStatus(item.isOrderStatus());
+			orderDto.setTotalItem(item.getTotalItem());
+			orderDto.setCustomer(UserDto.convertToUserDto(item.getCustomer()));
+			if (!Objects.isNull(item.getEmployee())) {
+				orderDto.setEmployee(UserDto.convertToUserDto(item.getEmployee()));
+			}
+			orderDto.setCreatedAt(item.getCreatedAt());
+			orderDto.setCode(item.getCodeOrder());
+
+			listOrderDto.add(orderDto);
+		}
+
+		CustomPage<OrderDto> pageResponse = new CustomPage<>(listOrderDto, indexPage, size,
+				listOrder.getTotalElements(), listOrder.getTotalPages());
+
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Tìm kiếm thành công", new HashMap<>() {
+			{
+				put("searchList", pageResponse);
+			}
+		}));
 	}
 
 	@Override
@@ -271,7 +309,7 @@ public class OrderServiceImpl implements OrderService {
 			orderRepository.save(order);
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(200, "Chấp nhận order thành công"));
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(200, "Chấp nhận đơn thành công"));
 	}
 
 	@Override
@@ -294,13 +332,56 @@ public class OrderServiceImpl implements OrderService {
 			order.setOrderStatus(false);
 		}
 		orderRepository.save(order);
-		return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(200, "Từ chối order thành công"));
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(200, "Từ chối đơn thành công"));
 	}
 
 	@Override
 	public ResponseEntity<ResponseObject> getAllOrders(int indexPage) {
-		// TODO Auto-generated method stub
-		return null;
+		int sizeItemOfPage = 4;
+		int page = indexPage - 1;
+		User user = userRepository.findUserById(SecurityUtils.getPrincipal().getId());
+
+		if (!user.getRole().getName().name().equals("ROLE_EMPLOYEE")) {
+			throw new AuthException("Truy cập bị từ chối");
+		} else {
+
+			Pageable pageable = PageRequest.of(page, sizeItemOfPage);
+
+			Page<Order> orders = orderRepository.findAllOrders(pageable);
+
+			List<OrderDto> orderDtoList = new ArrayList<>();
+
+			if (orders.getTotalElements() == 0) {
+				throw new NotFoundException("Không tìm thấy đơn");
+			} else {
+				for (Order order : orders.getContent()) {
+					OrderDto orderDto = new OrderDto();
+					orderDto.setOrderId(order.getOrderId());
+					orderDto.setCode(order.getCodeOrder());
+					orderDto.setStatus(order.isOrderStatus());
+					orderDto.setTotalItem(order.getTotalItem());
+					orderDto.setTotalPrice(order.getTotalPrice());
+					orderDto.setCreatedAt(order.getCreatedAt());
+
+					orderDto.setCustomer(UserDto.convertToUserDto(order.getCustomer()));
+					if (Objects.isNull(order.getEmployee())) {
+						orderDto.setEmployee(null);
+					} else {
+						orderDto.setEmployee(UserDto.convertToUserDto(order.getEmployee()));
+					}
+					orderDtoList.add(orderDto);
+				}
+			}
+
+			CustomPage<OrderDto> pageResponse = new CustomPage<>(orderDtoList, indexPage, sizeItemOfPage,
+					orders.getTotalElements(), orders.getTotalPages());
+
+			return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Danh sách đơn hàng", new HashMap<>() {
+				{
+					put("searchList", pageResponse);
+				}
+			}));
+		}
 	}
 
 	@Override
@@ -321,8 +402,8 @@ public class OrderServiceImpl implements OrderService {
 				orderDto.setTotalPrice(order.getTotalPrice());
 				orderDto.setStatus(order.isOrderStatus());
 				orderDto.setTotalItem(order.getTotalItem());
-				orderDto.setCustomerId(order.getCustomer().getId());
-				orderDto.setCreateAt(order.getCreatedAt());
+				orderDto.setCustomer(UserDto.convertToUserDto(order.getCustomer()));
+				orderDto.setCreatedAt(order.getCreatedAt());
 				List<OrderItem> list = orderItemRepository.findAllOrderItemsByOrderId(orderId);
 				List<OrderItemDto> listDto = new ArrayList<>();
 				for (OrderItem item : list) {
@@ -332,7 +413,7 @@ public class OrderServiceImpl implements OrderService {
 
 				return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Order", new HashMap<>() {
 					{
-						put("orderDetials", orderDto);
+						put("orderDetail", orderDto);
 						put("orderItems", listDto);
 					}
 				}));
@@ -362,7 +443,7 @@ public class OrderServiceImpl implements OrderService {
 		return cartItems;
 	}
 
-	private Cart transferDataCart(com.example.onlineshop.dto.CartDto cartDto) {
+	private Cart transferDataCart(CartDto cartDto) {
 		Cart cart = new Cart();
 		cart.setCartId(cartDto.getCartId());
 		User customer = userRepository.findById(cartDto.getCustomerId()).orElseThrow();

@@ -16,16 +16,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDto {
 	Long OrderId;
-
 	double totalPrice;
-
 	boolean status;
-
 	int totalItem;
 
-	Long customerId;
-	Long employeeId;
+	UserDto customer;
+	UserDto employee;
 
-	LocalDateTime createAt;
+	LocalDateTime createdAt;
 	String code;
 }

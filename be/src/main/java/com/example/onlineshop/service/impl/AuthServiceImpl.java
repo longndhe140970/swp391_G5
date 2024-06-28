@@ -2,7 +2,7 @@ package com.example.onlineshop.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,13 +10,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.example.onlineshop.dto.CustomerDto;
-import com.example.onlineshop.payload.request.EditProfileRequest;
-import com.example.onlineshop.payload.response.ResponseMessage;
-import com.example.onlineshop.utils.SecurityUtils;
-import com.example.onlineshop.utils.Utils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +27,8 @@ import org.springframework.stereotype.Service;
 import com.example.onlineshop.configuration.jwt.JwtUtils;
 import com.example.onlineshop.configuration.services.UserDetailsImpl;
 import com.example.onlineshop.constant.ERole;
+import com.example.onlineshop.dto.CustomPage;
+import com.example.onlineshop.dto.CustomerDto;
 import com.example.onlineshop.dto.SigninDto;
 import com.example.onlineshop.dto.UserDto;
 import com.example.onlineshop.entity.Role;
@@ -36,12 +36,16 @@ import com.example.onlineshop.entity.User;
 import com.example.onlineshop.entity.UserDetail;
 import com.example.onlineshop.exception.BadRequestException;
 import com.example.onlineshop.exception.NotFoundException;
+import com.example.onlineshop.payload.request.EditProfileRequest;
+import com.example.onlineshop.payload.request.SearchTextRequest;
 import com.example.onlineshop.payload.request.SignInRequest;
 import com.example.onlineshop.payload.request.SignUpRequest;
+import com.example.onlineshop.payload.response.ResponseMessage;
 import com.example.onlineshop.payload.response.ResponseObject;
 import com.example.onlineshop.repository.RoleRepository;
 import com.example.onlineshop.repository.UserRepository;
 import com.example.onlineshop.service.AuthService;
+import com.example.onlineshop.utils.SecurityUtils;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -63,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public ResponseEntity<ResponseObject> login(SignInRequest signInRequest) {
 		User user = userRepository.findByUsername(signInRequest.getUsername())
-				.orElseThrow(() -> new NotFoundException("aaaaaaaaaaa"));
+				.orElseThrow(() -> new NotFoundException("Tài khoản không tồn tại"));
 
 		if (Objects.isNull(user)) {
 			throw new NotFoundException("Tài khoản không tồn tại");
@@ -145,8 +149,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public ResponseEntity<ResponseObject> editProfile(EditProfileRequest editProfileRequest) {
 		Long userId = SecurityUtils.getPrincipal().getId();
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new NotFoundException("User not found"));
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
 
 		UserDetail userDetail = user.getUserDetail();
 
@@ -161,7 +164,6 @@ public class AuthServiceImpl implements AuthService {
 		userDetail.setFullName(editProfileRequest.getFullName());
 		userDetail.setAvatarUrl(editProfileRequest.getAvatarUrl());
 
-
 		String dobStr = editProfileRequest.getDob();
 		String dateString = "1111-11-11";
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // Specify the format of the date string
@@ -174,8 +176,7 @@ public class AuthServiceImpl implements AuthService {
 			e.printStackTrace(); // Handle ParseException if the string cannot be parsed
 		}
 
-
-        user.setUserDetail(userDetail);
+		user.setUserDetail(userDetail);
 		userRepository.save(user);
 
 		CustomerDto customerDto = new CustomerDto();
@@ -183,25 +184,97 @@ public class AuthServiceImpl implements AuthService {
 		customerDto.setAvatarUrl(userDetail.getAvatarUrl());
 		customerDto.setDob(userDetail.getDob().toString());
 
-
-
 		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Cập nhật thành công.", new HashMap<>() {
 			{
 				put("CustomerDto", customerDto);
 			}
 		}));
 	}
-	
+
 	@Override
 	public ResponseEntity<ResponseObject> profile() {
-		User user = userRepository.findById(SecurityUtils.getPrincipal().getId()).orElseThrow(()-> new NotFoundException("không tìm thấy người dùng"));
-		
+		User user = userRepository.findById(SecurityUtils.getPrincipal().getId())
+				.orElseThrow(() -> new NotFoundException("không tìm thấy người dùng"));
+
 		UserDto userDto = modelMapper.map(user.getUserDetail(), UserDto.class);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("thông tin cá nhân", new HashMap<>() {{
-			put("user", userDto);
-		}}));
+
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("thông tin cá nhân", new HashMap<>() {
+			{
+				put("user", userDto);
+			}
+		}));
 	}
 
-	
+	@Override
+	public ResponseEntity<ResponseObject> listAccount(int indexPage) {
+		int page = indexPage - 1;
+		int size = 5; // sửa size ở đây
+		Pageable pageable = PageRequest.of(page, size);
+
+		List<UserDto> listUsers = new ArrayList<UserDto>();
+
+		Page<User> users = userRepository.getListAccount(pageable);
+
+		for (User user : users.getContent()) {
+			if(!user.getRole().getName().name().equals("ROLE_ADMIN")) {
+				UserDto dto = UserDto.builder().userId(user.getId()).username(user.getUsername())
+						.fullName(user.getUserDetail().getFullName()).userStatus(user.isUserStatus()).build();
+				listUsers.add(dto);
+			}
+		}
+
+		CustomPage<UserDto> pageResponse = new CustomPage<>(listUsers, indexPage, size, users.getTotalElements(),
+				users.getTotalPages());
+
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Tìm kiếm thành công", new HashMap<>() {
+			{
+				put("searchList", pageResponse);
+			}
+		}));
+	}
+
+	@Override
+	public ResponseEntity<ResponseObject> searchAccountByUsername(SearchTextRequest textSearch, int indexPage) {
+		int page = indexPage - 1;
+		int size = 5; // sửa size ở đây
+		Pageable pageable = PageRequest.of(page, size);
+
+		List<UserDto> listUsers = new ArrayList<UserDto>();
+
+		Page<User> users = userRepository.searchAccountByUsernamer(textSearch.getSearchText(), pageable);
+
+		for (User user : users.getContent()) {
+			if(!user.getRole().getName().name().equals("ROLE_ADMIN")) {
+				UserDto dto = UserDto.builder().userId(user.getId()).username(user.getUsername())
+						.fullName(user.getUserDetail().getFullName()).userStatus(user.isUserStatus()).build();
+				listUsers.add(dto);
+			}
+		}
+
+		CustomPage<UserDto> pageResponse = new CustomPage<>(listUsers, indexPage, size, users.getTotalElements(),
+				users.getTotalPages());
+
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Tìm kiếm thành công", new HashMap<>() {
+			{
+				put("searchList", pageResponse);
+			}
+		}));
+	}
+
+	@Override
+	public ResponseEntity<ResponseMessage> changeStatus(Long id) {
+		User user = userRepository.findUserById(id);
+		Role role = user.getRole();
+		if (role.getName().name().equalsIgnoreCase("ROLE_ADMIN")) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new ResponseMessage(400, "không thể thay đổi trạng thái"));
+		}
+		if (Objects.isNull(user)) {
+			throw new NotFoundException("Không tìm thấy nhân viên");
+		}
+		user.setUserStatus(!user.isUserStatus());
+		userRepository.save(user);
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(200, "Thay đổi trạng thái thành công"));
+	}
+
 }
