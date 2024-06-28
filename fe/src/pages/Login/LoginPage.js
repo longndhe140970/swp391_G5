@@ -59,8 +59,11 @@ const LoginPage = () => {
                 });
 
                 if (userRole === USER_ROLE.ROLE_EMPLOYEE) {
-                    navigate("/employee/customer/list");
-                } else {
+                    navigate("/employee/order/list");
+                } else if (userRole === USER_ROLE.ROLE_ADMIN) {
+                    navigate("/admin/employee/list");
+                }
+                else {
                     navigate("/");
                 }
             } else {
@@ -72,7 +75,7 @@ const LoginPage = () => {
             }
         } catch (error) {
             const errorMessage = error?.response?.data?.message;
-            customToast({ type: "error", message: errorMessage ?? "Dang nhap khong thanh cong" });
+            customToast({ type: "error", message: errorMessage ?? "Đăng nhập thất bại" });
         }
     }
 

@@ -7,6 +7,9 @@ import usePopupStore from "../../stores/usePopupStore";
 import { useNavigate } from "react-router-dom";
 import { getTableConfig } from "./config/tableConfig";
 import { random } from "lodash";
+import { renderStt } from "../../utils/utils";
+import { sendRequest } from "../../services/sendRequest";
+import { AUTH_API } from "../../services/constant";
 
 const AdminAccountPage = () => {
 
@@ -14,6 +17,7 @@ const AdminAccountPage = () => {
   const [searchForm, setSearchForm] = useState({
     easySearch: "",
   });
+  const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(1);
@@ -24,14 +28,38 @@ const AdminAccountPage = () => {
     setSearchForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
   const [triggerReload, setTriggerReload] = useState(false);
-  const handleSearch = async () => {
+  const handleSearch = () => {
+    setSearchText(searchForm?.easySearch);
+    setCurrentPage(1);
   };
 
-  useEffect(() => {
-    const fetchData = () => {
-      try {
 
-        setData(getData())
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const dataResponse = await sendRequest({
+          method: searchText ? "POST" : "GET",
+          endpoint: searchText ? AUTH_API.SEARCH : AUTH_API.LIST,
+          params: {
+            "index-page": currentPage,
+          },
+          data: {
+            searchText,
+          },
+        });
+        const responseData = dataResponse?.data?.data?.searchList;
+        console.log(responseData);
+        const { content, totalElements, totalPage, size } = responseData;
+
+        const updatedData = content?.map?.((el, index) => ({
+          stt: renderStt(index, currentPage, size),
+          ...el,
+        }));
+
+        setData(updatedData)
+        setTotalItems(totalElements)
+        setPageSize(size)
+
       } catch (error) {
 
       } finally {
@@ -39,7 +67,7 @@ const AdminAccountPage = () => {
       }
     };
     fetchData();
-  }, [currentPage, triggerReload]);
+  }, [currentPage, searchText, triggerReload]);
 
   return (<>
     <ManagerLayout>

@@ -18,16 +18,23 @@ export const getLocalStrogageByKey = (key) => {
 
 export const getErrorMessage = (error) => error?.response?.data?.error;
 
-export const getObjectSearch = (searchParams) => {
+// export const getObjectSearch = (searchParams) => {
+//   if (!isEmpty(searchParams)) {
+//     const strSearchParams = searchParams?.replace("?", "");
+//     const listData = strSearchParams?.split("&");
+//     return listData?.reduce((acc, cur) => {
+//       const listAcc = cur?.split("=");
+//       return { ...acc, [listAcc?.[0]]: listAcc?.[1] };
+//     }, {});
+//   }
+// };
+
+export const getBookId = (searchParams) => {
   if (!isEmpty(searchParams)) {
-    const strSearchParams = searchParams?.replace("?", "");
-    const listData = strSearchParams?.split("&");
-    return listData?.reduce((acc, cur) => {
-      const listAcc = cur?.split("=");
-      return { ...acc, [listAcc?.[0]]: listAcc?.[1] };
-    }, {});
+    const listData = searchParams?.split("/");
+    return listData[listData.length - 1]
   }
-};
+}
 
 export const checkExpiredTime = () => {
   const tokenExpiredTime = getLocalStrogageByKey(TOKEN_EXPIRED_TIME);
@@ -41,6 +48,11 @@ export const renderHyperLink = (text, href) => {
       {text}
     </Link>
   );
+};
+
+export const renderStt = (index, currentPage = 1, itemPerPage = 10) => {
+  const stt = (currentPage - 1) * itemPerPage + index + 1;
+  return stt < 10 ? `0${stt}` : stt;
 };
 
 export const formatCurrency = (val) => val.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })

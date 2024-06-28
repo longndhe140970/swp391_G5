@@ -6,7 +6,7 @@ export const getTableConfig = () => {
     { title: "STT", dataIndex: "stt", width: "5%" },
     {
       title: "Mã đơn",
-      dataIndex: "codeOrder",
+      dataIndex: "code",
       width: "20%",
       render: (text, record) =>
         renderHyperLink(
@@ -16,7 +16,7 @@ export const getTableConfig = () => {
     },
     {
       title: "Thời gian",
-      dataIndex: "createAt",
+      dataIndex: "createdAt",
       width: "15%",
     },
     {
@@ -26,7 +26,7 @@ export const getTableConfig = () => {
     },
     {
       title: "Số lượng",
-      dataIndex: "totalQuantity",
+      dataIndex: "totalItem",
       width: "10%",
     },
     // {

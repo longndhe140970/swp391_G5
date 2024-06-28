@@ -54,7 +54,7 @@ public class BookServiceImpl implements BookService {
 
 		Page<Book> listBook = bookRepository.listSearchFilter(searchFilterRequest.getAuthor(),
 				searchFilterRequest.getCategory(), searchFilterRequest.getPublisher(), searchFilterRequest.getTitle(),
-				searchFilterRequest.getLanguage(), pageable);
+				searchFilterRequest.getLanguage(), pageable);	
 
 		List<ViewSearchDto> list = new ArrayList<>();
 

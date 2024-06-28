@@ -8,12 +8,14 @@ import Section from "../../components/Section";
 import CardBook from "../../components/CardBook/CardBook";
 import CustomPagination from "../../components/Pagination";
 import RemoveButton from "./Components/RemoveButton";
+import { useNavigate } from "react-router-dom";
 
 const FavoritePage = () => {
     const [dataBook, setDataBook] = useState();
     const [indexPage, setIndexPage] = useState(1);
     const [pageSize, setPageSize] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchBookData = async () => {
@@ -45,11 +47,9 @@ const FavoritePage = () => {
                 <Section title={"Sách yêu thích"}>
                     <div className="grid grid-cols-2 gap-8 mx-auto lg:grid-cols-4">
                         {dataBook?.map((item) => (
+
                             <CardBook
                                 item={item}
-                                handleTitleOnClick={() => {
-                                    // navigate(`/book-detail?id=${item?.bookId}`);
-                                }}
                                 actions={[
                                     <RemoveButton title="Xóa" onClick={async () => {
                                         try {
@@ -71,6 +71,7 @@ const FavoritePage = () => {
                                     }}></RemoveButton>
                                 ]}
                             />
+
                         ))}
                     </div>
                 </Section>

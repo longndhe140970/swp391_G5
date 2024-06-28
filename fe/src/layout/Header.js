@@ -177,7 +177,7 @@ const Header = () => {
                             >
                                 {user?.username}
                                 {isDropdownOpen && (
-                                    <div className="absolute p-2 mt-2 text-black bg-white border border-solid rounded top-14 right-32">
+                                    <div className="absolute p-2 mt-2 text-left text-black bg-white border border-solid rounded top-14 right-32">
                                         <ul>
                                             <li>
                                                 <Link to="/profile">Thông tin cá nhân</Link>
@@ -186,7 +186,7 @@ const Header = () => {
                                                 <Link to="/favorite">Sách yêu thích</Link>
                                             </li>
                                             <li>
-                                                <Link to="/history">Lịch sử mua hàng</Link>
+                                                <Link to="/history">Lịch sử</Link>
                                             </li>
                                             <li className="border border-black"></li>
                                             <li>

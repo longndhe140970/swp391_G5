@@ -1,21 +1,10 @@
 import MainLayput from "../layout/MainLayout";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
 
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-
-
-
-// import required modules
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
-import BookCardV2 from "../components/CardBook/CardBook";
-import Section from "../components/Section";
 import { BOOK_API } from "../services/constant";
 import { sendRequest } from "../services/sendRequest";
+import SlideSwip from "../components/Slide";
 
 const HomePage = () => {
   // const book = [
@@ -297,156 +286,52 @@ const HomePage = () => {
   //     description: "Làm thế nào để giữ cho mình một tâm thái bình thản trước mọi giông bão cuộc đời?"
   //   }
   // ]
-      const [dataBook, setDataBook] =useState([])
-      useEffect(() => {
-        const fetchBookData = async () => {
-          const dataResponse = await sendRequest({
-            method: "GET",
-            endpoint: `${BOOK_API.BOOK_HOME}`,
-            
-          });
-          
-          setDataBook(dataResponse?.data?.data?.top10BookNew)
-          dataBook?.map((item)=>({...item, copies_available: 12}))
-          console.log('searchData :>> ', dataBook);
-        }
-        fetchBookData()
-      }, []);
+  const [top10NewData, setTop10New] = useState([])
+  const [top10SaleData, setTop10Sale] = useState([])
+  useEffect(() => {
+    const fetchBookData = async () => {
+      const dataResponse = await sendRequest({
+        method: "GET",
+        endpoint: `${BOOK_API.BOOK_HOME}`,
+
+      });
+
+      setTop10New(dataResponse?.data?.data?.top10New)
+      setTop10Sale(dataResponse?.data?.data?.top10Sale)
+
+    }
+    fetchBookData()
+  }, []);
 
   return (<>
     <MainLayput>
       <div>
-        <img src="https://github.com/LuongHuyenChauAnh/Image/blob/main/book%20banner.png?raw=true"/> 
+        <img src="https://github.com/LuongHuyenChauAnh/Image/blob/main/book%20banner.png?raw=true" />
       </div>
       <div className="bg-[rgb(255,241,227)] pb-6">
 
-        <h2 className="pt-6 mt-20 text-4xl
-         font-semibold text-center text-sky-950 cardo">
-          Top sách thịnh hành
+        <h2 className="pt-6 mt-20 text-4xl font-semibold text-center text-sky-950 cardo">
+          Sách thịnh hành
         </h2>
         <hr className="mx-auto bg-yellow-400 w-[50%] h-[2.5px] my-10" />
-        <Swiper
-
-          autoplay={{
-            delay: 2500,
-            disableOnInteraction: false,
-          }}
-          slidesPerView={1}
-          spaceBetween={10}
-
-
-          breakpoints={{
-            640: {
-              slidesPerView: 2,
-              spaceBetween: 20,
-            },
-            768: {
-              slidesPerView: 4,
-              spaceBetween: 40,
-            },
-            1024: {
-              slidesPerView: 5,
-              spaceBetween: 50,
-            },
-          }}
-          pagination={{
-            clickable: true,
-          }}
-
-          modules={[Autoplay, Pagination]}
-          className="mySwiper"
-        >
-          {dataBook?. map((length)=>(
-          <SwiperSlide><BookCardV2 item={length} /></SwiperSlide>
-          ))}
-        </Swiper>
+        <SlideSwip item={top10NewData} />
       </div>
 
-      
-      <div className="bg-[rgb(255,241,227)] pb-6">
-        <h2 className="pt-6 mt-20 text-4xl
-         font-semibold text-center text-sky-950 cardo">
-          Top sách bán chạy
+
+      <div className="bg-[rgb(241,237,233)] pb-6">
+        <h2 className="pt-6 mt-20 text-4xl font-semibold text-center text-sky-950 cardo">
+          Sách bán chạy
         </h2>
         <hr className="mx-auto bg-yellow-400 w-[50%] h-[2.5px] my-10" />
-        <Swiper
-
-          autoplay={{
-            delay: 2500,
-            disableOnInteraction: false,
-          }}
-          slidesPerView={1}
-          spaceBetween={10}
-
-
-          breakpoints={{
-            640: {
-              slidesPerView: 2,
-              spaceBetween: 20,
-            },
-            768: {
-              slidesPerView: 4,
-              spaceBetween: 40,
-            },
-            1024: {
-              slidesPerView: 5,
-              spaceBetween: 50,
-            },
-          }}
-          pagination={{
-            clickable: true,
-          }}
-
-          modules={[Autoplay, Pagination]}
-          className="mySwiper"
-        >
-          {dataBook?. map((length)=>(
-          <SwiperSlide><BookCardV2 item={length} /></SwiperSlide>
-          ))}
-        </Swiper>
+        <SlideSwip item={top10SaleData} />
       </div>
 
-      <div className="bg-[rgb(255,241,227)] pb-6">
-        <h2 className="pt-6 mt-20 text-4xl
-         font-semibold text-center text-sky-950 cardo">
-          Top sách dành cho bạn
+      <div className="bg-[rgb(255,241,227)] pb-6 mb-20">
+        <h2 className="pt-6 mt-20 text-4xl font-semibold text-center text-sky-950 cardo">
+          Sách dành cho bạn
         </h2>
         <hr className="mx-auto bg-yellow-400 w-[50%] h-[2.5px] my-10" />
-        <Swiper
-
-          autoplay={{
-            delay: 2500,
-            disableOnInteraction: false,
-          }}
-          slidesPerView={1}
-          spaceBetween={10}
-
-
-          breakpoints={{
-            640: {
-              slidesPerView: 2,
-              spaceBetween: 20,
-            },
-            768: {
-              slidesPerView: 4,
-              spaceBetween: 40,
-            },
-            1024: {
-              slidesPerView: 5,
-              spaceBetween: 50,
-            },
-          }}
-          pagination={{
-            clickable: true,
-          }}
-
-          modules={[Autoplay, Pagination]}
-          className="mySwiper"
-        >
-          {dataBook?. map((length)=>(
-          <SwiperSlide><BookCardV2 item={length} /></SwiperSlide>
-          ))}
-        </Swiper>
+        <SlideSwip item={top10SaleData} />
       </div>
     </MainLayput>
   </>);

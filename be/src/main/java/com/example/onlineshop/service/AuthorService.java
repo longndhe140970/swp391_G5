@@ -17,5 +17,5 @@ public interface AuthorService {
 
 	public ResponseEntity<ResponseObject> searchAuthor(SearchTextRequest searchRequest, int indexPage);
 
-	public ResponseEntity<ResponseObject> listAuthor(int indexPage);
+	public ResponseEntity<ResponseObject> listAuthor(int indexPage);	
 }
