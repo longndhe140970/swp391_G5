@@ -6,6 +6,7 @@ import BookDetailComponent from "./Components/BookDetailComponent";
 import { sendRequest } from "../../services/sendRequest";
 import { customToast } from "../../toasts";
 import { BOOK_API } from "../../services/constant";
+
 import { isEmpty } from "lodash"
 import { useLocation, useNavigate } from "react-router-dom";
 import { getBookId } from "../../utils/utils";
@@ -50,7 +51,6 @@ const BookDetailPage = () => {
         <div className="flex justify-center mb-20">
           {isEmpty(bookRelate) && (<div className="justify-center text-lg">Không có sản phẩm liên quan</div>)}
         </div>
-
       </Section>
     </MainLayout>
   </>);

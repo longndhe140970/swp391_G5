@@ -14,6 +14,7 @@ import { AiFillHeart } from "react-icons/ai";
 
 const BookDetailComponent = ({ item }) => {
   const { handleOpenLoading, handleCloseLoading } = usePopupStore();
+
   const navigate = useNavigate()
   const [rate, setRate] = useState(0);
   const [like, setLike] = useState(false);
@@ -81,7 +82,6 @@ const BookDetailComponent = ({ item }) => {
           rating: rateValue
         }
       });
-      console.log(dataResponse);
       setRate(rateValue);
       if (dataResponse.status >= 200 || dataResponse.status < 300) {
         customToast({ type: "success", message: dataResponse.data.message || "Thành công" });
