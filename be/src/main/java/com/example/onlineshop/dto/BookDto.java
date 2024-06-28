@@ -22,6 +22,10 @@ public class BookDto {
 	String imageUrl;
 	int copies_available;
 	double price;
+	int page;
+	int totalRate;
+	int rate;
+	boolean liked;
 	String language;
 	List<String> authors;
 	List<String> categories;

@@ -66,8 +66,8 @@ public class Book {
 	@OneToOne(mappedBy = "book")
 	private CartItem cartItem;
 
-	@OneToOne(mappedBy = "book")
-	private OrderItem orderItem;
+	@OneToMany(mappedBy = "book")
+	private List<OrderItem> orderItems;
 
 	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private  List<Rating> ratings;

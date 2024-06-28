@@ -39,12 +39,13 @@ const BookCardV2 = ({ item, handleTitleOnClick, ...props }) => {
         {...props}
       >
         <Meta
-          title={<h3 className="font-bold text-[20px]">{item?.title}</h3>}
+          title={<h3 className="font-bold text-[20px] text-left">{item?.title}</h3>}
           description={
-            <p className="text-[16px]">
+            <p className="text-[16px] text-left text-gray-600">
               {item?.description?.length > 35
                 ? `${item?.description.slice(0, 35) + "..."}`
                 : item?.description}
+              {/* {item?.price} */}
             </p>
           }
         />

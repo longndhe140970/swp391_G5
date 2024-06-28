@@ -40,6 +40,8 @@ public class User {
 
 	@Column(name = "phone_number", length = 10)
 	String phoneNumber;
+	
+	boolean userStatus;
 
 	@ManyToOne
 	@JoinColumn(name = "role_id", nullable = false)

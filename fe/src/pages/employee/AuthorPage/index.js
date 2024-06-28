@@ -8,12 +8,16 @@ import usePopupStore from "../../../stores/usePopupStore";
 import { useEffect, useState } from "react";
 import { getTableConfig } from "./config/tableConfig";
 import { random } from "lodash";
+import { sendRequest } from "../../../services/sendRequest";
+import { AUTHOR_API } from "../../../services/constant";
+import { renderStt } from "../../../utils/utils";
 
 const EmplAuthorPage = () => {
   const { handleOpenLoading, handleCloseLoading } = usePopupStore();
   const [searchForm, setSearchForm] = useState({
     easySearch: "",
   });
+  const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(1);
@@ -24,14 +28,37 @@ const EmplAuthorPage = () => {
     setSearchForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
   const [triggerReload, setTriggerReload] = useState(false);
-  const handleSearch = async () => {
+  const handleSearch = () => {
+    setSearchText(searchForm?.easySearch);
+    setCurrentPage(1);
   };
 
-  useEffect(() => {
-    const fetchData = () => {
-      try {
 
-        setData(getData())
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const dataResponse = await sendRequest({
+          method: searchText ? "POST" : "GET",
+          endpoint: searchText ? AUTHOR_API.SEARCH : AUTHOR_API.LIST,
+          params: {
+            "index-page": currentPage,
+          },
+          data: {
+            searchText,
+          },
+        });
+        const responseData = dataResponse?.data?.data?.searchList;
+        const { content, totalElements, totalPage, size } = responseData;
+
+        const updatedData = content?.map?.((el, index) => ({
+          stt: renderStt(index, currentPage, size),
+          ...el,
+        }));
+
+        setData(updatedData)
+        setTotalItems(totalElements)
+        setPageSize(size)
+
       } catch (error) {
 
       } finally {
@@ -39,14 +66,14 @@ const EmplAuthorPage = () => {
       }
     };
     fetchData();
-  }, [currentPage, triggerReload]);
+  }, [currentPage, searchText]);
   return (<>
     <ManagerLayout>
       <TitlePage
         title="Danh sách tác giả"
         rightComponent={
-          <ButtonCustom onClick={() => navigate(DEFINE_ROUTES_EMPL.EMPL_BOOK_ADD)}>
-            Thêm tac gia
+          <ButtonCustom onClick={() => navigate(DEFINE_ROUTES_EMPL.EMPL_AUTHOR_ADD)}>
+            Thêm tác giả
           </ButtonCustom>
         }
       />

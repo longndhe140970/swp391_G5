@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.onlineshop.entity.Book;
+import com.example.onlineshop.entity.Publisher;
 
 import java.util.List;
 
@@ -43,11 +44,17 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 			@Param("publisherName") String publisherName, @Param("bookTitle") String bookTitle,
 			@Param("languageName") String languageName, Pageable pageable);
 
-	@Query(value = "SELECT * From book where book.title Like %:query%", nativeQuery = true)
-	List<Book> findByTitle(@Param("query") String title);
+	@Query(value = "SELECT * From book ", nativeQuery = true)
+	Page<Book> listBook(Pageable pageable);
+
+	@Query(value = "SELECT * FROM book WHERE :bookTitle IS NULL OR book.title LIKE %:bookTitle%", countQuery = "SELECT COUNT(book_id) FROM book WHERE :bookTitle IS NULL OR book.title LIKE %:bookTitle%", nativeQuery = true)
+	Page<Book> searchBook(@Param("bookTitle") String bookTitle, Pageable pageable);
 
 	@Query(value = "SELECT * FROM book order  by book_id desc limit 10", nativeQuery = true)
-	public List<Book> getBookForHome();
+	public List<Book> top10New();
+
+	@Query(value = "SELECT * FROM onlineshop.book order by (copies - copies_available) desc limit 10", nativeQuery = true)
+	public List<Book> top10Sale();
 
 	@Query(value = "SELECT book.* FROM book\r\n" + "INNER JOIN book_category \r\n"
 			+ "ON book.book_id = book_category.book_id\r\n"

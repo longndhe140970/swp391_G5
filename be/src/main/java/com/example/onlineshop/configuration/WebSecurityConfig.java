@@ -64,7 +64,9 @@ public class WebSecurityConfig {
 						.requestMatchers("/api/carts/**").permitAll()
 						.requestMatchers("/api/orders/**").permitAll()
 						.requestMatchers("/api/favorite/**").permitAll()
-						.requestMatchers("/api/images/**").permitAll()
+						.requestMatchers("/api/authors/**").permitAll()
+						.requestMatchers("/api/categories/**").permitAll()
+						.requestMatchers("/api/publishers/**").permitAll()
 						.anyRequest().authenticated());
 
 		http.authenticationProvider(authenticationProvider());

@@ -8,19 +8,69 @@ import { FaRegHeart } from "react-icons/fa";
 import ReadMore from "../../../components/ReadMore";
 import { Rate } from "antd";
 import { sendRequest } from "../../../services/sendRequest";
-import { BOOK_API, FAVORITE_API } from "../../../services/constant";
+import { BOOK_API, CART_API, FAVORITE_API } from "../../../services/constant";
 import { customToast } from "../../../toasts";
+import { AiFillHeart } from "react-icons/ai";
 
 const BookDetailComponent = ({ item }) => {
-
-  const navigate = useNavigate();
   const { handleOpenLoading, handleCloseLoading } = usePopupStore();
+  const navigate = useNavigate()
   const [rate, setRate] = useState(0);
   const [like, setLike] = useState(false);
-  
 
-  const handleBorrow = async () => {
+
+  const handleToCart = async () => {
+    try {
+      handleOpenLoading();
+      await sendRequest({
+        method: "PUT",
+        endpoint: `${CART_API.CART_ADD}`,
+        data: {
+          bookId: item?.bookId,
+          quantity: 1,
+        },
+      });
+      customToast({
+        type: "success",
+        message: "Đã thêm vào giỏ hàng",
+      });
+    } catch (error) {
+      customToast({
+        type: "error",
+        message: error?.message,
+      });
+    } finally {
+      handleCloseLoading();
+    }
   };
+
+  const handleBuy = async () => {
+    try {
+      handleOpenLoading();
+      await sendRequest({
+        method: "PUT",
+        endpoint: `${CART_API.CART_ADD}`,
+        data: {
+          bookId: item?.bookId,
+          quantity: 1,
+        },
+      });
+      customToast({
+        type: "success",
+        message: "Đã thêm vào giỏ hàng",
+      });
+      navigate("/cart")
+    } catch (error) {
+      customToast({
+        type: "error",
+        message: error?.message,
+      });
+    } finally {
+      handleCloseLoading();
+    }
+
+  };
+
   const handleRate = async (rateValue) => {
     try {
       const dataResponse = await sendRequest({
@@ -31,12 +81,13 @@ const BookDetailComponent = ({ item }) => {
           rating: rateValue
         }
       });
+      console.log(dataResponse);
       setRate(rateValue);
       if (dataResponse.status >= 200 || dataResponse.status < 300) {
         customToast({ type: "success", message: dataResponse.data.message || "Thành công" });
       }
     } catch (error) {
-      customToast({ type: "error", message: error?.message || "Lỗi" });
+      customToast({ type: "error", message: "Bạn chưa mua sản phẩm này" || error?.message });
     }
   };
   const handleFavorite = async () => {
@@ -49,14 +100,21 @@ const BookDetailComponent = ({ item }) => {
           favorite: !like
         }
       });
+      console.log(dataResponse);
       if (dataResponse.status >= 200 || dataResponse.status < 300) {
         customToast({ type: "success", message: dataResponse.data.message || "Thành công" });
         setLike(!like);
       }
+
     } catch (error) {
-      customToast({ type: "error", message: error?.message || "Lỗi" });
+      customToast({ type: "error", message: "Bạn hãy đăng nhập để thích sản phẩm" });
     }
   };
+
+  useEffect(() => {
+    setRate(item?.rate)
+    setLike(item?.liked)
+  }, [item?.rate, item?.liked]);
 
   return (<>
     <div className="flex flex-wrap gap-8">
@@ -83,7 +141,7 @@ const BookDetailComponent = ({ item }) => {
           </p>
 
           <p>
-            Số trang:<span className="ml-[10px]">{item?.length}</span>
+            Số trang:<span className="ml-[10px]">{item?.page}</span>
           </p>
           <p>
             Ngôn ngữ:<span className="ml-[10px]">{item?.language}</span>
@@ -99,16 +157,16 @@ const BookDetailComponent = ({ item }) => {
           <div className="flex mt-[10px]">
             <p className="mr-[10px]">Đánh giá</p>
             <Rate
-              value={rate}
+              value={item?.rate}
               onChange={(e) => {
                 handleRate(e);
               }}
             />
-            <p className="ml-3">{`(250)`}danh gia</p>
+            <p className="ml-3">({item?.totalRate})</p>
           </div>
           <div className=" mt-[10px]">
             <div>
-              <span className="mr-[10px]">Trong kho con:</span>
+              <span className="mr-[10px]">Sản phẩm có sẵn:</span>
               <span className="text-green-500">
                 {item?.copies_available}
               </span>
@@ -117,21 +175,21 @@ const BookDetailComponent = ({ item }) => {
           <div className="flex justify-between mt-[20px]">
             <button
               class="hover:bg-yellow-600 font-bold rounded-md py-3 px-6 bg-yellow-500 w-[175px] text-white mr-5"
-              onClick={handleBorrow}
+              onClick={handleBuy}
             >
               Mua ngay
             </button>
             <button
               class="hover:bg-red-600 font-bold rounded-md py-3 px-6 bg-red-500 text-white w-[175px] text-wrap "
-              onClick={handleBorrow}
+              onClick={handleToCart}
             >
-              Them vao gio hang
+              Thêm vào giỏ hàng
             </button>
           </div>
         </div>
         <div>
           {like ? (
-            <FaRegHeart
+            <AiFillHeart
               onClick={handleFavorite}
               style={{
                 fontSize: 30,
@@ -139,10 +197,11 @@ const BookDetailComponent = ({ item }) => {
               }}
             />
           ) : (
-            <FaRegHeart
+            <AiFillHeart
               onClick={handleFavorite}
               style={{
                 fontSize: 30,
+                color: "gray"
               }}
             />
           )}

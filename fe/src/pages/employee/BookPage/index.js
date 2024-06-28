@@ -8,12 +8,16 @@ import usePopupStore from "../../../stores/usePopupStore";
 import { useEffect, useState } from "react";
 import { getTableConfig } from "./config/tableConfig";
 import { random } from "lodash";
+import { sendRequest } from "../../../services/sendRequest";
+import { BOOK_API } from "../../../services/constant";
+import { renderStt } from "../../../utils/utils";
 
 const EmplBookPage = () => {
   const { handleOpenLoading, handleCloseLoading } = usePopupStore();
   const [searchForm, setSearchForm] = useState({
     easySearch: "",
   });
+  const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(1);
@@ -24,14 +28,37 @@ const EmplBookPage = () => {
     setSearchForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
   const [triggerReload, setTriggerReload] = useState(false);
-  const handleSearch = async () => {
+  const handleSearch = () => {
+    setSearchText(searchForm?.easySearch);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       try {
+        const dataResponse = await sendRequest({
+          method: searchText ? "POST" : "GET",
+          endpoint: searchText ? BOOK_API.FILL_SEARCH : BOOK_API.LIST,
+          params: {
+            "index-page": currentPage,
+          },
+          data: {
+            searchText,
+          },
+        });
+        const responseData = dataResponse?.data?.data?.searchList;
+        console.log('responseData :>> ', dataResponse);
+        const { content, totalElements, totalPage, size } = responseData;
 
-        setData(getData())
+        const updatedData = content?.map?.((el, index) => ({
+          stt: renderStt(index, currentPage, size),
+          ...el,
+        }));
+
+        setData(updatedData)
+        setTotalItems(totalElements)
+        setPageSize(totalPage)
+
       } catch (error) {
 
       } finally {
@@ -39,7 +66,7 @@ const EmplBookPage = () => {
       }
     };
     fetchData();
-  }, [currentPage, triggerReload]);
+  }, [currentPage, searchText]);
   return (<>
     <ManagerLayout>
       <TitlePage

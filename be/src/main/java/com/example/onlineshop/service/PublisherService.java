@@ -10,11 +10,13 @@ import com.example.onlineshop.payload.response.ResponseObject;
 
 @Service
 public interface PublisherService {
-	public ResponseEntity<ResponseMessage> createAuthor(AuthorRequest creatRequest);
+	public ResponseEntity<ResponseMessage> createPublisher(AuthorRequest creatRequest);
 
-	public ResponseEntity<ResponseMessage> editAuthor(AuthorRequest creatRequest, Long authorId);
+	public ResponseEntity<ResponseMessage> editPublisher(AuthorRequest creatRequest, Long publisherId);
 
-	public ResponseEntity<ResponseObject> searchAuthor(SearchTextRequest searchRequest, int indexPage);
+	public ResponseEntity<ResponseObject> searchPublisher(SearchTextRequest searchRequest, int indexPage);
 
-	public ResponseEntity<ResponseObject> listAuthor(int indexPage);
+	public ResponseEntity<ResponseObject> listPublisher(int indexPage);
+	
+	public ResponseEntity<ResponseObject> detailPublisher(Long publisherId);	
 }

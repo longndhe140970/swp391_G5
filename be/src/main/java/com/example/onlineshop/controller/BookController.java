@@ -1,7 +1,5 @@
 package com.example.onlineshop.controller;
 
-import com.example.onlineshop.payload.request.BookRequest;
-import com.example.onlineshop.payload.request.RatingRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.onlineshop.payload.request.RatingRequest;
 import com.example.onlineshop.payload.request.SearchFilterRequest;
 import com.example.onlineshop.payload.request.SearchTextRequest;
 import com.example.onlineshop.service.BookService;
@@ -33,8 +32,9 @@ public class BookController {
 	}
 
 	@PostMapping("search")
-	public ResponseEntity<?> getSearchFill(@RequestBody SearchTextRequest searchTextRequest) {
-		return bookService.searchFill(searchTextRequest);
+	public ResponseEntity<?> getSearchFill(@RequestBody SearchTextRequest searchTextRequest,
+			@RequestParam("index-page") int indexPage) {
+		return bookService.searchFill(searchTextRequest, indexPage);
 	}
 
 	@GetMapping("")
@@ -48,8 +48,9 @@ public class BookController {
 	}
 
 	@GetMapping("/list")
-	public ResponseEntity<?> getAllBooks() {
-		return bookService.getAllBooks();
+	@PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+	public ResponseEntity<?> getAllBooks(@RequestParam("index-page") int indexPage) {
+		return bookService.getAllBooks(indexPage);
 	}
 
 //	@PostMapping("add")

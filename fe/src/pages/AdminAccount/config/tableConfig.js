@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import ActionButton from "../Components/ActionButton";
 
 export const getTableConfig = (setTriggerReload) => {
@@ -12,7 +13,7 @@ export const getTableConfig = (setTriggerReload) => {
       title: "Tên nhân viên",
       dataIndex: "employeeName",
       width: "20%",
-      render: (_, record) => <>{`${record?.fullName}`}</>,
+      render: (_, record) => (<>{isEmpty(record?.fullName) ? "Full Name" : record?.fullName}</>),
     },
     {
       title: "Trạng thái tài khoản",
