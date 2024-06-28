@@ -26,26 +26,26 @@ export const MenuEmpl = [
   {
     title: "Đơn hàng",
     path: DEFINE_ROUTES_EMPL.EMPL_ORDER_LIST,
-    activePath: "/employee/order"
+    activePath: "/employee/order/"
   },
   {
     title: "Sách",
     path: DEFINE_ROUTES_EMPL.EMPL_BOOK_LIST,
-    activePath: "/employee/book"
+    activePath: "/employee/book/"
   },
   {
     title: "Nhà xuất bản",
     path: DEFINE_ROUTES_EMPL.EMPL_PUBLISHER_LIST,
-    activePath: "/employee/publisher"
+    activePath: "/employee/publisher/"
   },
   {
     title: "Tác giả",
     path: DEFINE_ROUTES_EMPL.EMPL_AUTHOR_LIST,
-    activePath: "/employee/author"
+    activePath: "/employee/author/"
   },
   {
     title: "Danh mục",
     path: DEFINE_ROUTES_EMPL.EMPL_CATEGORY_LIST,
-    activePath: "/employee/category"
+    activePath: "/employee/category/"
   },
 ]

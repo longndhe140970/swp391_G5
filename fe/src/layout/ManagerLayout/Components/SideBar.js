@@ -25,10 +25,8 @@ const SideBar = () => {
         </div>
         <div className="mt-[20px]">
           {(user?.roles === USER_ROLE.ROLE_EMPLOYEE
-            /* ? MenuEmpl
-            : MenuAdmin */
-            ? MenuAdmin
-            : MenuEmpl
+            ? MenuEmpl
+            : MenuAdmin
           )?.map?.((el) => (
             <>
               <Link

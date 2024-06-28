@@ -18,7 +18,12 @@ customAxios.interceptors.response.use(
     return res;
   },
   (err) => {
-
+    // if ([401, 403].includes(err?.response?.status)) {
+    //   localStorage.clear();
+    //   if (!["/login", "", "/"]?.includes(window.location.pathname)) {
+    //     window.location.pathname = "/login";
+    //   }
+    // }
     return Promise.reject(err);
   }
 );

@@ -11,11 +11,14 @@ import ProfilePage from "../pages/Profile";
 import SearchBookPage from "../pages/SearchBook";
 import SignUpPage from "../pages/SignUpPage";
 import EmplAddBookPage from "../pages/employee/AddBookPage";
+import EmplAuthorAdd from "../pages/employee/AuthorAdd";
 import EmplAuthorPage from "../pages/employee/AuthorPage";
 import EmplBookPage from "../pages/employee/BookPage";
+import EmplCategoryAdd from "../pages/employee/CategoryAdd";
 import EmplCategoryPage from "../pages/employee/CategoryPage";
 import EmplOrderAdd from "../pages/employee/OrderAdd";
 import EmplOrderPage from "../pages/employee/OrderPage";
+import EmplPublisherAdd from "../pages/employee/PublisherAdd";
 import EmplPublisherPage from "../pages/employee/PublisherPage";
 import { DEFINE_ROUTES_ADMIN } from "./MenuAdmin";
 import { DEFINE_ROUTES_EMPL } from "./MenuEmpl";
@@ -49,7 +52,7 @@ export const ConfigRotues = [
     page: <CartPage />
   },
   {
-    path: "/book-detail",
+    path: "/book-detail/:slug",
     page: <BookDetailPage />
   },
   {
@@ -93,12 +96,35 @@ export const ConfigRotues = [
     page: <EmplOrderAdd />
   },
   {
+    path: "/employee/book/detail/:slug",
+    page: <EmplAddBookPage />
+  },
+  {
     path: DEFINE_ROUTES_EMPL.EMPL_BOOK_ADD,
     page: <EmplAddBookPage />
   },
   {
-    path: "/test",
-    page: <TextEditor />
+    path: "/employee/author/detail/:slug",
+    page: <EmplAuthorAdd />
   },
-
+  {
+    path: DEFINE_ROUTES_EMPL.EMPL_AUTHOR_ADD,
+    page: <EmplAuthorAdd />
+  },
+  {
+    path: "/employee/category/detail/:slug",
+    page: <EmplCategoryAdd />
+  },
+  {
+    path: DEFINE_ROUTES_EMPL.EMPL_CATEGORY_ADD,
+    page: <EmplCategoryAdd />
+  },
+  {
+    path: "/employee/publisher/detail/:slug",
+    page: <EmplPublisherAdd />
+  },
+  {
+    path: DEFINE_ROUTES_EMPL.EMPL_PUBLISHER_ADD,
+    page: <EmplPublisherAdd />
+  },
 ]

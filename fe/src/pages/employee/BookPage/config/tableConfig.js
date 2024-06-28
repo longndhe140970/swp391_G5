@@ -16,10 +16,10 @@ export const getTableConfig = () => {
     },
     {
       title: "Tác giả",
-      dataIndex: "author",
+      dataIndex: "authors",
       width: "15%",
       render: (_, record) => (
-        <span>{record?.authors?.map((el) => el?.name)?.join(", ")}</span>
+        <span>{record?.authors?.map((el) => (el))?.join(", ")}</span>
       ),
     },
     {
