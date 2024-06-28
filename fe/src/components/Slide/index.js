@@ -29,7 +29,7 @@ const SlideSwip = ({ item }) => {
           spaceBetween: 30,
         },
         1024: {
-          slidesPerView: 7,
+          slidesPerView: 5,
           spaceBetween: 40,
         },
       }}

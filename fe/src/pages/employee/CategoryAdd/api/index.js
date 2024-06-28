@@ -13,7 +13,7 @@ export const handleSubmitCategory = async ({
   try {
     await sendRequest({
       endpoint: isDetail
-        ? `${CATEGORY_API.EDIT}?id=${formData?.id}`
+        ? `${CATEGORY_API.EDIT}/${formData?.id}`
         : CATEGORY_API.ADD,
       method: isDetail ? "PUT" : "POST",
       data: {

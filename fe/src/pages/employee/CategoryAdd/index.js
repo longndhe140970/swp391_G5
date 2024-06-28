@@ -55,7 +55,7 @@ const EmplCategoryAdd = () => {
           endpoint: `${CATEGORY_API.LIST}/${idCategory}`,
         });
         formik.setValues({
-          name: dataResponse?.data?.data?.cateDetail?.name || "",
+          name: dataResponse?.data?.data?.categoryDetail?.name || "",
           id: idCategory
         });
       } catch (error) {
