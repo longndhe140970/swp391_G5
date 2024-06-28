@@ -55,7 +55,7 @@ const EmplPublisherAdd = () => {
           endpoint: `${PUBLISHER_API.LIST}/${idPub}`,
         });
         formik.setValues({
-          name: dataResponse?.data?.data?.authorDetail?.name || "",
+          name: dataResponse?.data?.data?.publisherDetail?.name || "",
           id: idPub
         });
       } catch (error) {

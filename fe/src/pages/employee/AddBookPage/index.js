@@ -1,13 +1,19 @@
 
 import ButtonCustom from "../../../components/Button/Button";
 import InputField from "../../../components/Input/InputField";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SelectInput from "../../../components/Select";
 import TextEditor from "../../../components/TextArea";
 import ManagerLayout from "../../../layout/ManagerLayout/ManagerLayout";
 import TitlePage from "../../../components/Title";
 import InputFieldUpload from "../../../components/Input/InputFieldUpload";
 import { customToast } from "../../../toasts";
+import { PUBLISHER_API } from "../../../services/constant";
+import * as yup from "yup";
+import { useFormik } from "formik";
+import { handleSubmitBook } from "./api";
+import usePopupStore from "../../../stores/usePopupStore";
+import { useLocation } from "react-router-dom";
 
 const EmplAddBookPage = () => {
 
@@ -17,8 +23,64 @@ const EmplAddBookPage = () => {
     const [language, setLanguage] = useState("");
     const [category, setCategory] = useState([]);
     const [copies, setCopies] = useState(0);
-    const [pages, setPages] = useState(0);
+    const [page, setpage] = useState(0);
     const [description, setDescription] = useState("");
+    const [imgUrl, setImgUrl] = useState("");
+
+    const { handleOpenLoading, handleCloseLoading } = usePopupStore();
+
+    const location = useLocation()
+
+    const isDetail = useMemo(() => {
+        return location?.pathname?.includes("detail");
+      }, [location?.pathname]);
+      const [triggerReload, setTriggerReload] = useState(false);
+
+
+    const validationSchema = yup.object({
+        imageUrl: yup
+            .string("Hãy nhập hình ảnh")
+            .required("Hình ảnh không được để trống")
+            .trim(),
+        title: yup.string("Hãy nhập tiêu đề sách")
+            .required("Tiêu đề sách không được để trống")
+            .trim("Tiêu đề sách không được có khoảng trống"),
+        description: yup.string("Hãy nhập mô tả sách")
+            .required("Mô tả sách không được để trống"),
+        copies_available: yup.number("Hãy nhập số lượng").required("Hãy nhập số lượng").positive("Hãy nhập số lượng > 0").integer(),
+        page: yup.number("Hãy nhập số trang sách").required("Hãy nhập số trang sách").positive("Hãy nhập số trang sách > 0").integer(),
+        category: yup.array().min(1, "Hãy chọn danh mục").required("Hãy chọn danh mục"),
+        publisher: yup.string("Hãy nhập nhà xuất bản")
+            .required("Nhà xuất bản không được để trống")
+            .trim(""),
+        author: yup.array().min(1, "Hãy chọn tác giả").required("Hãy chọn tác giả"),
+        language: yup.string("Hãy chọn ngôn ngữ")
+            .required("Ngôn ngữ không được để trống")
+            .trim(""),
+    });
+    const formik = useFormik({
+        initialValues: {
+            imageUrl: "",
+            title: "",
+            description: "",
+            copies_available: 0,
+            page: 0,
+            category: [],
+            publisher: "",
+            author: [],
+            language: "",
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            handleSubmitBook({
+                formData: values,
+                isDetail,
+                handleCloseLoading,
+                handleOpenLoading,
+                setTriggerReload,
+            });
+        },
+    });
 
     const publisherData = [
         { label: "A", value: "A" },
@@ -73,13 +135,40 @@ const EmplAddBookPage = () => {
         setLanguage(e.target.value)
     };
 
-    const handlePagesChange = async (e) => {
+    const handlepageChange = async (e) => {
         setLanguage(e.target.value)
     };
 
     const handleDescriptionChange = async (e) => {
 
     }
+
+    // const getDataPublisher = async () => {
+
+    //     handleOpenLoading();
+    //     try {
+    //       const dataResponse = await sendRequest({
+    //         method: "GET",
+    //         endpoint: `${PUBLISHER_API.LIST}`,
+    //       });
+    //       formik.setValues({
+    //         name: dataResponse?.data?.data?.categoryDetail?.name || "",
+    //         id: idCategory
+    //       });
+    //     } catch (error) {
+    //       customToast({
+    //         type: "error",
+    //         message: getErrorMessage(error),
+    //       });
+    //     } finally {
+    //       handleCloseLoading();
+    //     }
+
+    //   };
+
+    useEffect(() => {
+
+    })
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -88,24 +177,40 @@ const EmplAddBookPage = () => {
 
         } catch (error) {
             const errorMessage = error?.response?.data?.message;
-            customToast({ type: "error", message: errorMessage ?? "Dang nhap khong thanh cong" });
+            customToast({ type: "error", message: errorMessage ?? "Lỗi" });
         }
     }
 
     return (<>
         <ManagerLayout>
-            <TitlePage title={"Sách"} />
+            <TitlePage title={"Tạo sách"} />
             <form>
-                <div className="max-w-[1400px] flex shadow-2xl flex-row my-[50px] w-full">
+                <div className=" flex shadow-2xl flex-row w-full">
+                    <img src={imgUrl}></img>
                     <div
                         className="flex flex-col px-[20px] py-[20px] justify-center text-center w-1/2"
                         style={{
                             border: "0.5px solid #E0E0E0",
                         }}
                     >
-                        <InputFieldUpload />
+                        <InputFieldUpload
+                            name="imageUrl"
+                            setDataChange={setImgUrl}
+                            value={formik.values.imageUrl}
+                            onChange={formik.handleChange}
+                        />
+                        {formik.errors.imageUrl && formik.touched.name ? (
+                            <div className="text-red-500">{formik.errors.name}</div>
+                        ) : null}
                         <div className="flex flex-col gap-5 ">
-                            <TextEditor />
+                            <TextEditor
+                                name="description"
+                                value={formik.values.description}
+                                onChange={formik.handleChange}
+                            />
+                            {formik.errors.description && formik.touched.name ? (
+                                <div className="text-red-500">{formik.errors.name}</div>
+                            ) : null}
                         </div>
                     </div>
                     <div
@@ -118,9 +223,13 @@ const EmplAddBookPage = () => {
                             <div className="py-[5px]">
                                 <InputField
                                     label="Tên sách"
-                                    name="bookName"
-                                    onChange={handleNameChange}
+                                    name="title"
+                                    value={formik.values.title}
+                                    onChange={formik.handleChange}
                                 />
+                                {formik.errors.title && formik.touched.name ? (
+                                    <div className="text-red-500">{formik.errors.name}</div>
+                                ) : null}
                             </div>
                             <div className="py-[5px]">
                                 <InputField
@@ -128,18 +237,27 @@ const EmplAddBookPage = () => {
                                     name="publisher"
                                     type={"select"}
                                     placehoder={"Chọn nhà xuất bản"}
-                                    onChange={handlePublisherChange}
+                                    value={formik.values.publisher}
+                                    onChange={formik.handleChange}
                                     options={publisherData}
                                 />
+                                {formik.errors.publisher && formik.touched.name ? (
+                                    <div className="text-red-500">{formik.errors.name}</div>
+                                ) : null}
                             </div>
                             <div className="py-[5px]">
                                 <SelectInput
                                     label="Tác giả"
+                                    name="author"
                                     placeholder={"Chọn tác giả"}
                                     defaultValue={author}
                                     options={authorData}
-                                    onChange={handleAuthorChange}
+                                    value={formik.values.author}
+                                    onChange={formik.handleChange}
                                 />
+                                {formik.errors.author && formik.touched.name ? (
+                                    <div className="text-red-500">{formik.errors.name}</div>
+                                ) : null}
                             </div>
                             <div className="py-[5px]">
                                 <InputField
@@ -147,32 +265,49 @@ const EmplAddBookPage = () => {
                                     name="language"
                                     type={"select"}
                                     placehoder={"Chọn ngôn ngữ"}
-                                    onChange={handleLanguageChange}
+                                    value={formik.values.language}
+                                    onChange={formik.handleChange}
                                     options={languageData}
                                 />
+                                {formik.errors.language && formik.touched.name ? (
+                                    <div className="text-red-500">{formik.errors.name}</div>
+                                ) : null}
                             </div>
                             <div className="py-[5px]">
                                 <SelectInput
                                     label="Danh mục"
                                     placeholder={"Chọn danh mục"}
+                                    name="category"
                                     defaultValue={category}
                                     options={categoryData}
-                                    onChange={handleCategoryChange}
+                                    value={formik.values.category}
+                                    onChange={formik.handleChange}
                                 />
+                                {formik.errors.category && formik.touched.name ? (
+                                    <div className="text-red-500">{formik.errors.name}</div>
+                                ) : null}
                             </div>
                             <div className="py-[5px]">
                                 <InputField
                                     label="Bản sao"
-                                    name="copies"
-                                    onChange={handleCopiesChange}
+                                    name="copies_available"
+                                    value={formik.values.copies_available}
+                                    onChange={formik.handleChange}
                                 />
+                                {formik.errors.copies_available && formik.touched.name ? (
+                                    <div className="text-red-500">{formik.errors.name}</div>
+                                ) : null}
                             </div>
                             <div className="py-[5px]">
                                 <InputField
                                     label="Số trang"
-                                    name="pages"
-                                    onChange={handlePagesChange}
+                                    name="page"
+                                    value={formik.values.page}
+                                    onChange={formik.handleChange}
                                 />
+                                {formik.errors.page && formik.touched.name ? (
+                                    <div className="text-red-500">{formik.errors.name}</div>
+                                ) : null}
                             </div>
                             <div className="flex justify-center py-[5px]">
                                 <ButtonCustom type="submit" onSubmit={handleSubmit}>

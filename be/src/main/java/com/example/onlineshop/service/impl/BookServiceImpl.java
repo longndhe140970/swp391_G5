@@ -1,5 +1,6 @@
 package com.example.onlineshop.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 import com.example.onlineshop.dto.*;
 import com.example.onlineshop.entity.*;
 import com.example.onlineshop.exception.AuthException;
+import com.example.onlineshop.payload.request.BookRequest;
 import com.example.onlineshop.payload.request.RatingRequest;
 import com.example.onlineshop.payload.response.ResponseMessage;
 import com.example.onlineshop.repository.OrderItemRepository;
@@ -213,16 +215,48 @@ public class BookServiceImpl implements BookService {
 		List<Book> bookList = bookRepository.findAll();
 		List<BookDto> dtoList = new ArrayList<>();
 		for (Book book : bookList) {
-			BookDto dto = modelMapper.map(book, BookDto.class);
-			dtoList.add(dto);
+			BookDto bookDto = modelMapper.map(book, BookDto.class);
+
+			List<String> auListDto = new ArrayList<>();
+			for (Author item : book.getAuthors()) {
+				auListDto.add(item.getName());
+			}
+			bookDto.setAuthors(auListDto);
+
+			List<String> CategoriesListDto = new ArrayList<>();
+			for (Category item : book.getCategories()) {
+				CategoriesListDto.add(item.getName());
+			}
+			bookDto.setCategories(CategoriesListDto);
+
+			bookDto.setLanguage(book.getLanguage().getName());
+
+			bookDto.setPublisher(book.getPublisher().getName());
+
+			dtoList.add(bookDto);
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Thông tin sách", new HashMap<>() {
 			{
 				put("bookDtoList", dtoList);
-				put("book", bookList);
 			}
 		}));
 	}
+
+//	@Override
+//	public ResponseEntity<ResponseObject> addBook(BookRequest bookRequest) {
+//		Book book = new Book();
+//		book.setTitle(bookRequest.getTitle());
+//		book.setDescription((bookRequest.getDescription()));
+//		book.setCopies(bookRequest.getCopies());
+//		book.setImageUrl(bookRequest.getImageUrl());
+//		book.setCreateAt(LocalDateTime.now());
+//		book.setPrice(bookRequest.getPrice());
+//		book.setPage(bookRequest.getPage());
+//
+//
+//
+//		return null;
+//	}
 
 	@Override
 	public ResponseEntity<ResponseMessage> rateBook(RatingRequest ratingRequest) {
@@ -259,12 +293,12 @@ public class BookServiceImpl implements BookService {
 		List<ViewSearchDto> vDtos = new ArrayList<>();
 		for (Book book : bookList) {
 			ViewSearchDto viewSearchDto = modelMapper.map(book, ViewSearchDto.class);
-			
+
 			viewSearchDto.setCategories(null);
 			viewSearchDto.setDescription(null);
 			viewSearchDto.setPublisher(null);
 			viewSearchDto.setLanguage(null);
-			
+
 			vDtos.add(viewSearchDto);
 		}
 

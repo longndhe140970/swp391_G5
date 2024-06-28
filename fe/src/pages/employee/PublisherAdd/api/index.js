@@ -13,7 +13,7 @@ export const handleSubmitPub = async ({
   try {
     await sendRequest({
       endpoint: isDetail
-        ? `${PUBLISHER_API.EDIT}?id=${formData?.id}`
+        ? `${PUBLISHER_API.EDIT}/${formData?.id}`
         : PUBLISHER_API.ADD,
       method: isDetail ? "PUT" : "POST",
       data: {

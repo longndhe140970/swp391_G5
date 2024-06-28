@@ -11,7 +11,7 @@ export const getTableConfig = () => {
       render: (text, record) =>
         renderHyperLink(
           text,
-          `${DEFINE_ROUTES_EMPL.EMPL_CATEGORY_DETAIL}?id=${record.categoryId}`
+          `${DEFINE_ROUTES_EMPL.EMPL_CATEGORY_DETAIL}/${record.categoryId}`
         ),
     }
     // {

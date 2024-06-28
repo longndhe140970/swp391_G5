@@ -93,20 +93,4 @@ const EmplBookPage = () => {
   </>);
 }
 
-export const getData = () => {
-  const listData = [];
-  for (let i = 0; i < 50; i++) {
-    listData.push({
-      stt: i,
-      bookId: random(0, 1000),
-      title: `title ${random(0, 1000)}`,
-      authors: [{ id: i, name: `author ${random(0, 1000)}` }],
-      language: "vietnamese",
-      price: `${random(0, 1000)}`,
-      copies_available: `${random(0, 1000)}`,
-    });
-  }
-  return listData;
-};
-
 export default EmplBookPage;

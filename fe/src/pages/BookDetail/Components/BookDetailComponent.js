@@ -100,9 +100,11 @@ const BookDetailComponent = ({ item }) => {
           favorite: !like
         }
       });
-      console.log(dataResponse);
-      if (dataResponse.status >= 200 || dataResponse.status < 300) {
+      if (dataResponse?.data?.status === 200 ) {
         customToast({ type: "success", message: dataResponse.data.message || "Thành công" });
+        setLike(!like);
+      } else {
+        customToast({ type: "error", message: dataResponse.data.message || "T" });
         setLike(!like);
       }
 

@@ -11,7 +11,7 @@ export const getTableConfig = () => {
       render: (text, record) =>
         renderHyperLink(
           text,
-          `${DEFINE_ROUTES_EMPL.EMPL_PUBLISHER_DETAIL}?id=${record.publisherId}`
+          `${DEFINE_ROUTES_EMPL.EMPL_PUBLISHER_DETAIL}/${record.publisherId}`
         ),
     }
     // {
